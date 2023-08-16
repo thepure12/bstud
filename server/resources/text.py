@@ -7,9 +7,13 @@ from string import Template
 import re
 import toml
 
-config = toml.load("config.toml")
-ESV_URL = config["esv_url"]
-API_TOKEN = config["api_token"]
+try:
+    config = toml.load("config.toml")
+    ESV_URL = config["esv_url"]
+    API_TOKEN = config["api_token"]
+except:
+    ESV_URL = os.environ.get("ESV_URL")
+    API_TOKEN = os.environ.get("ESV_API_TOKEN")
 HEADERS = {"Authorization": f"Token {API_TOKEN}"}
 PRINT_OPTIONS = {
     "landscape": True,
