@@ -15,7 +15,7 @@
         </b-col>
       </b-row>
     </b-col>
-    <div v-if="text" class="fixed-bottom p-2">
+    <div v-if="text && !printable" class="fixed-bottom p-2">
       <b-btn class="float-right" :href="downloadUrl" target="_blank">Download</b-btn>
     </div>
   </b-row>
