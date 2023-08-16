@@ -15,6 +15,10 @@
                 <b-form-group :label="`Font Size: ${fontSize}`" label-size="lg">
                     <b-form-input :value="fontSize" type="range" min="7" max="24" @update="setFontSize"></b-form-input>
                 </b-form-group>
+                <b-form-group :label="`Line Spacing: ${lineSpacing}`" label-size="lg">
+                    <b-form-input :value="lineSpacing" type="range" :min="lhMin" max="2" step=".1"
+                        @update="setLineSpacing"></b-form-input>
+                </b-form-group>
             </b-form>
         </b-card>
         <b-card bg-variant="dark" header-class="bg-secondary h5">
@@ -23,8 +27,7 @@
             </template>
             <b-form>
                 <template v-for="(v, k) in observations">
-                    <b-form-checkbox :checked="v" @input="v => setObservation({ observation: k, value: v })"
-                        size="lg">
+                    <b-form-checkbox :checked="v" @input="v => setObservation({ observation: k, value: v })" size="lg">
                         {{ k }}
                     </b-form-checkbox>
                 </template>
@@ -39,10 +42,16 @@ export default {
         return {}
     },
     computed: {
-        ...mapState(["textOptions", "observations", "fontSize"])
+        ...mapState(["textOptions", "observations", "fontSize", "lineSpacing"]),
+        lhMin() {
+            return .1
+        },
+        lhMax() {
+
+        }
     },
     methods: {
-        ...mapMutations(["setTextOption", "setObservation", "setFontSize"]),
+        ...mapMutations(["setTextOption", "setObservation", "setFontSize", "setLineSpacing"]),
     }
 }
 </script>

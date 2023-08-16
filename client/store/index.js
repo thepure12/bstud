@@ -1,7 +1,7 @@
 export const state = () => ({
     textOptions: {
-        // "q": "Romans 8:31-39",
-        q: "Gen 1",
+        "q": "Romans 8:31-39",
+        // q: "Gen 1",
         "include-passage-references": true,
         "include-footnotes": false,
         "include-headings": false
@@ -29,7 +29,8 @@ export const state = () => ({
     passages: [],
     printable: false,
     downloading: false,
-    fontSize: 10
+    fontSize: 10,
+    lineSpacing: 1
 })
 
 export const mutations = {
@@ -50,6 +51,9 @@ export const mutations = {
     },
     setFontSize(state, size) {
         state.fontSize = size
+    },
+    setLineSpacing(state, spacing) {
+        state.lineSpacing = spacing
     }
 }
 
