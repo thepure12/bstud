@@ -45,13 +45,13 @@ class PassageText(Resource):
             worksheet_text = tpl.substitute(
                 text=text, style=css, font_size=self.params.get("font-size") or 10
             )
-            print("Converting")
+            # print("Converting")
             converter.convert(
                 f"data:text/html;charset=utf-8,{worksheet_text}",
                 "out.pdf",
                 print_options=PRINT_OPTIONS,
             )
-            print("Converted")
+            # print("Converted")
             filename = (
                 f"{self.params.q}.pdf" if self.params.q else "bible_study_worksheet.pdf"
             )

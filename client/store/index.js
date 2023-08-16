@@ -23,6 +23,7 @@ export const state = () => ({
     ],
     passages: [],
     printable: false,
+    downloading: false,
     fontSize: 10
 })
 
@@ -38,6 +39,9 @@ export const mutations = {
     },
     setPrintable(state, printable) {
         state.printable = printable
+    },
+    setDownloading(state, downloading) {
+        state.downloading = downloading
     },
     setFontSize(state, size) {
         state.fontSize = size
