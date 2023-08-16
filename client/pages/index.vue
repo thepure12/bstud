@@ -31,7 +31,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["textOptions", "observations", "passages", "fontSize"]),
+    ...mapState(["textOptions", "observations", "passages", "fontSize", "printable"]),
     text() {
       return this.passages.join("\n\n")
         .replace(/\n +/gm, "\n")
