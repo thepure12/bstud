@@ -1,6 +1,6 @@
 <template>
   <b-row class="gap-1 flex-grow-1">
-    <b-col class="pr-2">
+    <b-col class="pr-2 h-100" :class="printable ? '' : 'overflow-auto'">
       <span class="pre-wrap" :style="`font-size: ${fontSize}pt;`">{{ text }}</span>
     </b-col>
     <b-col class="d-flex flex-column h-100" :style="downloading ? 'height: 765px !important;' : ''">
@@ -45,7 +45,7 @@ export default {
     ...mapMutations(["setDownloading", "setPrintable"]),
     onDownload() {
       let element = document.querySelector(".app-container")
-      let windowHeight = element.scrollHeight
+      let windowHeight = element.querySelector(".col").scrollHeight
       this.setDownloading(true)
       this.setPrintable(true)
       this.$nextTick(() => {

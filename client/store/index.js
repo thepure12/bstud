@@ -1,6 +1,7 @@
 export const state = () => ({
     textOptions: {
-        "q": "Romans 8:31-39",
+        // "q": "Romans 8:31-39",
+        q: "Gen 1",
         "include-passage-references": true,
         "include-footnotes": false,
         "include-headings": false

@@ -48,3 +48,25 @@ body {
 .observation {
   width: calc(100% / 3);
 }
+
+/* width */
+.col::-webkit-scrollbar {
+  width: .25rem;
+}
+
+/* Track */
+.col::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px var(--dark);
+  border-radius: 10px;
+}
+
+/* Handle */
+.col::-webkit-scrollbar-thumb {
+  background: var(--secondary);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.col::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
