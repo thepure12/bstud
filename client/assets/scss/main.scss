@@ -33,3 +33,14 @@ body {
 .vh-100 {
   height: 100vh;
 }
+
+@media only screen and (max-width:1025px) {
+  .search-group input {
+    border-top-left-radius: .25rem !important;
+    border-bottom-left-radius: .25rem !important;
+  }
+
+  .search-group>.input-group-prepend {
+    display: none;
+  }
+}
