@@ -5,10 +5,10 @@
             Bible Study Worksheet
         </b-navbar-brand>
         <b-form class="flex-grow-1" @submit.prevent="onSearch">
-            <b-input-group>
+            <b-input-group class="search-group">
                 <b-form-input v-model="search" type="search" placeholder="Search"></b-form-input>
                 <template #prepend>
-                    <b-btn @click="$store.commit('setPrintable', true)">Print</b-btn>
+                    <b-btn class="print" @click="$store.commit('setPrintable', true)">Print</b-btn>
                 </template>
                 <template #append>
                     <b-btn type="submit">Search</b-btn>

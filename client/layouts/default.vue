@@ -30,11 +30,11 @@ export default {
         doPrint() {
             if (!this.downloading) {
                 this.$nextTick(() => print())
-                this.setPrintable(false)
             }
         }
     },
     created() {
+        onafterprint = () => this.setPrintable(false)
         this.$nuxt.$on('hideHeader', () => {
             this.showHeader = false
         })
