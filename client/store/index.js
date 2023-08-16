@@ -5,22 +5,26 @@ export const state = () => ({
         "include-footnotes": false,
         "include-headings": false
     },
-    observations: [
-        {
-            "Repeated Words": true,
-            "Comparisons and Contrasts": true,
-            "Connectors": true,
-            "Structure": true,
-        },
-        {
-            "Genre": true,
-            "Mood": true,
-            "Grammar": true,
-            "Names/Titles of Characters": true,
-            "Climax": true,
-            "Other Literary Devices": true,
-        }
-    ],
+    observations: {
+        "Repetiton": true,
+        "Continuity": false,
+        "Inclusios": false,
+        "Causation": false,
+        "Substantiation": false,
+        "Comparisons/Contrasts": true,
+        "Connectors": true,
+        "Structure": true,
+        "Preparation/Intro": false,
+        "Refrain": false,
+        "Explanation/Analysis": false,
+        "Summarization": false,
+        "Genre": true,
+        "Mood": true,
+        "Grammar": true,
+        "Names/Titles of Characters": true,
+        "Climax": true,
+        "Other Literary Devices": true,
+    },
     passages: [],
     printable: false,
     downloading: false,
@@ -31,8 +35,8 @@ export const mutations = {
     setTextOption(state, { option, value }) {
         state.textOptions[option] = value
     },
-    setObservation(state, { col, observation, value }) {
-        state.observations[col][observation] = value
+    setObservation(state, { observation, value }) {
+        state.observations[observation] = value
     },
     setPassages(state, passages) {
         state.passages = passages

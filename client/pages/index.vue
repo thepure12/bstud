@@ -5,14 +5,14 @@
     </b-col>
     <b-col class="d-flex flex-column h-100" :style="downloading ? 'height: 765px !important;' : ''">
       <b-row class="flex-grow-1 gap-1 mr-1">
-        <b-col v-for="(col, i) in observations" class="px-0 d-flex flex-column gap-1" :key="`col-${i}`">
-          <template v-for="(v, k) in col">
-            <b-card v-if="v" :key="k" class="flex-grow-1" body-class="px-2 py-1">
+        <!-- <b-col v-for="(col, i) in observations" class="px-0 d-flex flex-column gap-1" :key="`col-${i}`"> -->
+          <template v-for="(v, k) in observations">
+            <b-card v-if="v" :key="k" class="flex-grow-1 observation" body-class="px-2 py-1">
               {{ k }}
             </b-card>
           </template>
 
-        </b-col>
+        <!-- </b-col> -->
       </b-row>
     </b-col>
     <div v-if="text && !printable" class="fixed-bottom p-2 pr-4">
