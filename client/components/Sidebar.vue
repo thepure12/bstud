@@ -22,13 +22,11 @@
                 Observations
             </template>
             <b-form>
-                <template v-for="(col, i) in observations">
-                    <template v-for="(j, k) in col">
-                        <b-form-checkbox :checked="col[k]"
-                            @input="v => setObservation({ col: i, observation: k, value: v })" size="lg">
-                            {{ k }}
-                        </b-form-checkbox>
-                    </template>
+                <template v-for="(v, k) in observations">
+                    <b-form-checkbox :checked="v" @input="v => setObservation({ observation: k, value: v })"
+                        size="lg">
+                        {{ k }}
+                    </b-form-checkbox>
                 </template>
             </b-form>
         </b-card>
