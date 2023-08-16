@@ -3,7 +3,7 @@
     <b-col class="pr-2">
       <span class="pre-wrap" :style="`font-size: ${fontSize}pt;`">{{ text }}</span>
     </b-col>
-    <b-col class="d-flex flex-column h-100">
+    <b-col class="d-flex flex-column h-100" :style="downloading ? 'height: 765px !important;' : ''">
       <b-row class="flex-grow-1 gap-1 mr-1">
         <b-col v-for="(col, i) in observations" class="px-0 d-flex flex-column gap-1" :key="`col-${i}`">
           <template v-for="(v, k) in col">
@@ -15,23 +15,21 @@
         </b-col>
       </b-row>
     </b-col>
-    <div v-if="text && !printable" class="fixed-bottom p-2">
-      <b-btn class="float-right" :href="downloadUrl" target="_blank">Download</b-btn>
+    <div v-if="text && !printable" class="fixed-bottom p-2 pr-4">
+      <b-btn class="float-right" @click="onDownload">Download</b-btn>
     </div>
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from "vuex"
 
 export default {
   data() {
     return {
-      printable: false,
-      showOptions: false,
     }
   },
   computed: {
-    ...mapState(["textOptions", "observations", "passages", "fontSize", "printable"]),
+    ...mapState(["textOptions", "observations", "passages", "fontSize", "printable", "downloading"]),
     text() {
       return this.passages.join("\n\n")
         .replace(/\n +/gm, "\n")
@@ -44,6 +42,26 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(["setDownloading", "setPrintable"]),
+    onDownload() {
+      let element = document.querySelector(".app-container")
+      let windowHeight = element.scrollHeight
+      this.setDownloading(true)
+      this.setPrintable(true)
+      this.$nextTick(() => {
+        console.log(windowHeight);
+        let opt = {
+          margin: .25,
+          filename: this.textOptions.q,
+          jsPDF: { unit: "in", format: "letter", orientation: "landscape" },
+          html2canvas: { windowHeight: windowHeight }
+        }
+        html2pdf().from(element).set(opt).save().then(() => {
+          this.setDownloading(false)
+          this.setPrintable(false)
+        })
+      })
+    }
   },
 }
 </script>

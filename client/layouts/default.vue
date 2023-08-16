@@ -18,7 +18,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(["printable", "textOptions"])
+        ...mapState(["printable", "textOptions", "downloading"])
     },
     watch: {
         printable(val) {
@@ -28,8 +28,10 @@ export default {
     methods: {
         ...mapMutations(["setTextOption", "setObservation", "setPrintable"]),
         doPrint() {
-            print()
-            this.setPrintable(false)
+            if (!this.downloading) {
+                this.$nextTick(() => print())
+                this.setPrintable(false)
+            }
         }
     },
     created() {
