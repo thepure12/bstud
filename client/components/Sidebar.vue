@@ -16,7 +16,7 @@
                     <b-form-input :value="fontSize" type="range" min="7" max="24" @update="setFontSize"></b-form-input>
                 </b-form-group>
                 <b-form-group :label="`Line Spacing: ${lineSpacing}`" label-size="lg">
-                    <b-form-input :value="lineSpacing" type="range" :min="lhMin" max="2" step=".1"
+                    <b-form-input :value="lineSpacing" type="range" :min="lhMin" max="3" step=".1"
                         @update="setLineSpacing"></b-form-input>
                 </b-form-group>
             </b-form>
