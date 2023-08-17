@@ -33,6 +33,17 @@
                 </template>
             </b-form>
         </b-card>
+        <b-card bg-variant="dark" header-class="bg-secondary h5">
+            <template #header>Questions</template>
+            <b-form>
+                <template v-for="(v, k) in questions">
+                    <b-form-group :label="`${k}: ${v}`" label-size="lg">
+                        <b-form-input :value="v" type="range" min="0" max="5" step="1"
+                            @update="v => setQuestion({ question: k, value: v })"></b-form-input>
+                    </b-form-group>
+                </template>
+            </b-form>
+        </b-card>
     </b-sidebar>
 </template>
 <script>
@@ -42,7 +53,7 @@ export default {
         return {}
     },
     computed: {
-        ...mapState(["textOptions", "observations", "fontSize", "lineSpacing"]),
+        ...mapState(["textOptions", "observations", "questions", "fontSize", "lineSpacing"]),
         lhMin() {
             return .1
         },
@@ -51,7 +62,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations(["setTextOption", "setObservation", "setFontSize", "setLineSpacing"]),
+        ...mapMutations(["setTextOption", "setObservation", "setQuestion", "setFontSize", "setLineSpacing"]),
     }
 }
 </script>
