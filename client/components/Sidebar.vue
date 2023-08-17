@@ -1,6 +1,6 @@
 <template>
     <b-sidebar title="Options" id="menu" header-class="bg-dark" bg-variant="dark" text-variant="white"
-        backdrop-variant="dark" backdrop>
+        backdrop-variant="dark" body-class="pb-2" backdrop>
         <b-card bg-variant="dark" header-class="bg-secondary h5">
             <template #header>
                 Text Options

@@ -27,15 +27,15 @@ export const state = () => ({
         "Other Literary Devices": true,
     },
     questions: {
-        Definitive: 1,
-        Rationale: 1,
-        Implicational: 1
+        Definitive: 0,
+        Rationale: 0,
+        Implicational: 0
     },
     passages: [],
     printable: false,
     downloading: false,
     fontSize: 10,
-    lineSpacing: 1
+    lineSpacing: 1.2
 })
 
 export const mutations = {

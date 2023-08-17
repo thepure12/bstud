@@ -93,7 +93,8 @@ body {
   display: flex;
   margin: 1rem;
   margin-inline: auto;
-  padding: 1rem;
+  padding-block: .4in;
+  padding-inline: .25in;
   border: 1px dashed steelblue;
   width: 11in;
   height: 8.5in;
@@ -106,23 +107,29 @@ body {
 }
 
 @media only screen and (max-width: 11in) {
-  .app-container {
-    max-width: calc(100vw - 2rem);
+
+  .scrolltainer {
+    padding-inline: 1rem;
+  }
+
+  .app-container,
+  .sheet {
     height: unset;
     aspect-ratio: calc(8.5/11);
+    max-width: calc(100vw - 2rem);
   }
 
   @media (orientation: portrait) {
 
-    .app-container {
+    .scrolltainer>div {
       margin-top: 2rem;
       position: relative;
     }
 
-    .app-container::before {
+    .scrolltainer>div::before {
       position: absolute;
       display: block;
-      top: -1.75rem;
+      top: -1.25rem;
       left: 0;
       text-align: center;
       width: 100%;
