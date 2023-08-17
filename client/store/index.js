@@ -26,6 +26,11 @@ export const state = () => ({
         "Climax": true,
         "Other Literary Devices": true,
     },
+    questions: {
+        Definitive: 1,
+        Rationale: 1,
+        Implicational: 1
+    },
     passages: [],
     printable: false,
     downloading: false,
@@ -54,6 +59,9 @@ export const mutations = {
     },
     setLineSpacing(state, spacing) {
         state.lineSpacing = spacing
+    },
+    setQuestion(state, { question, value }) {
+        state.questions[question] = parseInt(value)
     }
 }
 

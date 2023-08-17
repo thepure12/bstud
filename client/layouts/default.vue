@@ -2,7 +2,7 @@
     <div class="d-flex flex-column vh-100">
         <Header v-if="!printable"></Header>
         <div :class="!printable ? 'scrolltainer' : ''">
-            <div :class="!printable ? 'app-container' : 'printable'">
+            <div>
                 <Nuxt />
             </div>
         </div>
@@ -57,63 +57,5 @@ export default {
 }
 </script>
 <style scoped>
-@media print {
-    @page {
-        size: landscape;
-    }
-}
 
-.scrolltainer {
-    /* display: flex; */
-    flex-grow: 1;
-    overflow-x: auto;
-}
-
-.app-container {
-    display: flex;
-    margin: 1rem;
-    margin-inline: max(calc((100% - 11in) / 2), 1rem);
-    padding: 1rem;
-    border: 1px dashed steelblue;
-    width: 11in;
-    height: 8.5in;
-}
-
-.printable {
-    display: flex;
-    height: 100vh;
-}
-
-@media only screen and (max-width: 11in) {
-    .app-container {
-        max-width: calc(100vw - 2rem);
-        height: unset;
-        aspect-ratio: calc(8.5/11);
-    }
-
-    @media (orientation: portrait) {
-
-        .app-container {
-            margin-top: 2rem;
-            position: relative;
-        }
-
-        .app-container::before {
-            position: absolute;
-            display: block;
-            top: -1.75rem;
-            left: 0;
-            text-align: center;
-            width: 100%;
-            content: "Switch to landscape for better preview";
-        }
-    }
-
-    @media (orientation: landscape) {
-        .app-container {
-            height: calc(100vh - 5.5rem);
-        }
-    }
-
-}
 </style>

@@ -50,12 +50,12 @@ body {
 }
 
 /* width */
-.col::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: .25rem;
 }
 
 /* Track */
-.col::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
   box-shadow: inset 0 0 5px var(--dark);
   border-radius: 10px;
 }
@@ -67,6 +67,73 @@ body {
 }
 
 /* Handle on hover */
-.col::-webkit-scrollbar-thumb:hover {
+*::-webkit-scrollbar-thumb:hover {
   background: var(--primary);
+}
+
+.b-sidebar-body::-webkit-scrollbar-thumb {
+  background: var(--white);
+  border-radius: 10px;
+}
+
+@media print {
+  @page {
+    size: landscape;
+  }
+}
+
+.scrolltainer {
+  /* display: flex; */
+  flex-grow: 1;
+  overflow-x: auto;
+}
+
+.app-container,
+.sheet {
+  display: flex;
+  margin: 1rem;
+  margin-inline: auto;
+  padding: 1rem;
+  border: 1px dashed steelblue;
+  width: 11in;
+  height: 8.5in;
+}
+
+.printable,
+.printable-sheet {
+  display: flex;
+  height: 7.77in;
+}
+
+@media only screen and (max-width: 11in) {
+  .app-container {
+    max-width: calc(100vw - 2rem);
+    height: unset;
+    aspect-ratio: calc(8.5/11);
+  }
+
+  @media (orientation: portrait) {
+
+    .app-container {
+      margin-top: 2rem;
+      position: relative;
+    }
+
+    .app-container::before {
+      position: absolute;
+      display: block;
+      top: -1.75rem;
+      left: 0;
+      text-align: center;
+      width: 100%;
+      content: "Switch to landscape for better preview";
+    }
+  }
+
+  @media (orientation: landscape) {
+    .app-container {
+      height: calc(100vh - 5.5rem);
+    }
+  }
+
 }
