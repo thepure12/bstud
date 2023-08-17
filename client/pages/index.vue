@@ -5,7 +5,7 @@
         :style="`line-height: ${lineSpacing}rem;`">
         <span class="pre-wrap" :style="`font-size: ${fontSize}pt;`">{{ sheet1Text }}</span>
       </b-col>
-      <b-col class="d-flex flex-column h-100" >
+      <b-col class="d-flex flex-column h-100">
         <b-row class="flex-grow-1 gap-1 mr-1">
           <template v-for="(v, k) in observations">
             <b-card v-if="v" :key="k" class="flex-grow-1 observation" body-class="px-2 py-1">
@@ -21,7 +21,8 @@
     <div v-if="downloading && (totalQuestions || sheet2Text)" class="mb-2 p-2"></div>
     <b-row v-if="totalQuestions || sheet2Text" class="gap-1" :class="printable ? 'printable-sheet' : 'sheet'">
       <b-col class="d-flex flex-column gap-1 mr-1">
-        <span v-if="sheet2Text" class="pre-wrap" :style="`font-size: ${fontSize}pt;`">{{ sheet2Text }}</span>
+        <span v-if="sheet2Text" class="pre-wrap" :style="`font-size: ${fontSize}pt; line-height: ${lineSpacing}rem;`">{{
+          sheet2Text }}</span>
         <template v-for="(v, k) in questions">
           <b-card v-if="v" class="flex-grow-1" header-class="h6" body-class="col d-flex flex-column">
             <template #header>{{ k }}</template>
