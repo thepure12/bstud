@@ -2,7 +2,7 @@
     <b-navbar class="flex-wrap justify-content-start" type="dark" variant="primary" toggleable sticky>
         <b-navbar-toggle target="menu" class="border-white"></b-navbar-toggle>
         <b-navbar-brand>
-            Bible Study Worksheet
+            Vathéos
         </b-navbar-brand>
         <b-form class="flex-grow-1" @submit.prevent="onSearch">
             <b-input-group class="search-group">

@@ -7,7 +7,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'client-bootstrap',
+    title: 'Vathéos',
     htmlAttrs: {
       lang: 'en'
     },
