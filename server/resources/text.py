@@ -32,6 +32,9 @@ class PassageText(Resource):
         text = re.sub(r"\n{2,}", "\n", text)
         return text
 
+    def options(self):
+        pass
+
     def get(self):
         res = requests.get(ESV_URL, headers=HEADERS, params=self.params)
         if "download" in self.params:
