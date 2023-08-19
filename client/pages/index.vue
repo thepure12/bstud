@@ -3,7 +3,7 @@
     <template v-for="(text, k) in sheetTexts">
       <b-row v-if="text || k === 'sheet1'" :id="k" class="flex-grow-1 overflow-auto" :key="k" :ref="`textContainer`"
         :class="printable ? 'printable-sheet' : 'sheet'">
-        <b-col class="overflow-auto">
+        <b-col class="overflow-auto mr-2">
           <span class="pre-wrap" :style="`font-size: ${fontSize}pt; line-height: ${lineSpacing}rem;`">{{ text }}</span>
         </b-col>
         <!-- Observations -->
@@ -29,7 +29,13 @@
           </template>
         </b-col>
       </b-row>
+      <div v-if="downloading" class="mb-2 p-2"></div>
     </template>
+    <div v-if="text && !printable" class="fixed-bottom p-2 pr-4">
+      <b-btn class="float-right" @click="onDownload">
+        <b-icon icon="download" animation="cylon-vertical"></b-icon>
+      </b-btn>
+    </div>
     <!-- <b-row class="gap-1 flex-grow-1" :class="printable ? 'printable-sheet' : 'sheet'">
       <b-col ref="text-container" class="pr-2 h-100" :class="printable ? '' : 'overflow-auto'"
         :style="`line-height: ${lineSpacing}rem;`">
@@ -69,8 +75,13 @@
 </template>
 <script>
 import { mapState, mapMutations } from "vuex"
+import { BIcon, BIconDownload } from 'bootstrap-vue'
 
 export default {
+  components: {
+    BIcon,
+    BIconDownload
+  },
   data() {
     return {
       sheetTexts: {
@@ -90,7 +101,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["textOptions", "observations", "questions", "passages", "fontSize", "printable", "downloading", "lineSpacing"]),
+    ...mapState(["textOptions", "observations", "questions", "passages", "fontSize", "printable", "downloading", "lineSpacing", "trimming"]),
     text() {
       let text = this.passages.join("\n\n")
         .replace(/\n +/gm, "\n")
@@ -117,15 +128,19 @@ export default {
       this.trimText(1)
     },
     totalQuestions() {
-      this.trimText(2)
+      this.trimText(1)
     }
   },
   methods: {
-    ...mapMutations(["setDownloading", "setPrintable"]),
+    ...mapMutations(["setDownloading", "setPrintable", "setTrimming"]),
     async trimText(sheet) {
+      if (sheet === 1 && this.trimming) return
+      this.setTrimming(true)
       // console.log("Sheet: " + sheet);
-      if (sheet === 1)
+      if (sheet === 1) {
+        this.resetSheetText()
         this.sheetTexts[`sheet${sheet}`] = this.text
+      }
       await this.$nextTick()
       // console.log(this.textContainers[sheet - 1]);
       while (
@@ -146,21 +161,40 @@ export default {
       // console.log(this.textContainers)
       if (this.textContainers.length > sheet)
         this.trimText(sheet + 1)
+      else
+        this.setTrimming(false)
+    },
+    resetSheetText() {
+      for (const [sheet, value] of Object.entries(this.sheetTexts)) {
+        this.sheetTexts[sheet] = ""
+      }
     },
     onDownload() {
       this.setDownloading(true)
       this.setPrintable(true)
       this.$nextTick(() => {
         let element = document.querySelector("#sheets")
-        let windowHeight = element.clientHeight
-        if (this.sheet2Text === "") windowHeight += 100
+        // let windowHeight = element.clientHeight
         let opt = {
           margin: .25,
           filename: this.textOptions.q,
           jsPDF: { unit: "in", format: "letter", orientation: "landscape" },
-          html2canvas: { windowHeight: windowHeight }
+          // html2canvas: { windowHeight: windowHeight }
         }
-        html2pdf().from(element).set(opt).save().then(() => {
+        let worker = html2pdf().set(opt).from(this.textContainers[0])
+        worker = worker.toPdf()
+        this.textContainers.slice(1).forEach((element, i) => {
+          worker = worker
+            .get('pdf')
+            .then(pdf => {
+              pdf.addPage()
+            })
+            .from(element)
+            .toContainer()
+            .toCanvas()
+            .toPdf()
+        })
+        worker.save().then(() => {
           this.setDownloading(false)
           this.setPrintable(false)
         })

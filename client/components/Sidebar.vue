@@ -13,11 +13,12 @@
                     @input="v => setTextOption({ option: 'include-footnotes', value: v })"
                     size="lg">Footnotes</b-form-checkbox>
                 <b-form-group :label="`Font Size: ${fontSize}`" label-size="lg">
-                    <b-form-input :value="fontSize" type="range" min="7" max="24" @update="setFontSize"></b-form-input>
+                    <b-form-input :value="fontSize" type="range" min="7" max="24" @update="setFontSize"
+                        debounce="1000" :disabled="trimming"></b-form-input>
                 </b-form-group>
                 <b-form-group :label="`Line Spacing: ${lineSpacing}`" label-size="lg">
-                    <b-form-input :value="lineSpacing" type="range" :min="lhMin" max="3" step=".1"
-                        @update="setLineSpacing"></b-form-input>
+                    <b-form-input :value="lineSpacing" type="range" :min="lhMin" max="3" step=".1" @update="setLineSpacing"
+                        debounce="1000" :disabled="trimming"></b-form-input>
                 </b-form-group>
             </b-form>
         </b-card>
@@ -53,7 +54,7 @@ export default {
         return {}
     },
     computed: {
-        ...mapState(["textOptions", "observations", "questions", "fontSize", "lineSpacing"]),
+        ...mapState(["textOptions", "observations", "questions", "fontSize", "lineSpacing", "trimming"]),
         lhMin() {
             return .1
         },
