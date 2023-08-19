@@ -112,11 +112,13 @@ body {
     padding-inline: 1rem;
   }
 
+  #sheets {
+    width: calc(11.5in);
+    max-width: none;
+  }
 
   .sheet {
-    height: unset;
     aspect-ratio: calc(8.5/11);
-    max-width: calc(100vw - 2rem);
   }
 
   @media (orientation: portrait) {
@@ -126,10 +128,12 @@ body {
       position: relative;
     }
 
-    .scrolltainer>div::before {
+    .navbar::after {
       position: absolute;
       display: block;
-      top: -1.25rem;
+      background-color: var(--secondary);
+      color: white;
+      top: 7.5rem;
       left: 0;
       text-align: center;
       width: 100%;
