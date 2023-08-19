@@ -35,7 +35,8 @@ export const state = () => ({
     printable: false,
     downloading: false,
     fontSize: 10,
-    lineSpacing: 1.2
+    lineSpacing: 1.2,
+    trimming: false
 })
 
 export const mutations = {
@@ -62,6 +63,9 @@ export const mutations = {
     },
     setQuestion(state, { question, value }) {
         state.questions[question] = parseInt(value)
+    },
+    setTrimming(state, trimming) {
+        state.trimming = trimming
     }
 }
 
