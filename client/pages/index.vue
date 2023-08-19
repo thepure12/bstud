@@ -1,9 +1,39 @@
 <template>
   <b-col id="sheets" class="d-flex flex-column gap-1">
-    <b-row class="gap-1 flex-grow-1" :class="printable ? 'printable-sheet' : 'sheet'">
+    <template v-for="(text, k) in sheetTexts">
+      <b-row v-if="text || k === 'sheet1'" :id="k" class="flex-grow-1 overflow-auto" :key="k" :ref="`textContainer`"
+        :class="printable ? 'printable-sheet' : 'sheet'">
+        <b-col class="overflow-auto">
+          <span class="pre-wrap" :style="`font-size: ${fontSize}pt; line-height: ${lineSpacing}rem;`">{{ text }}</span>
+        </b-col>
+        <!-- Observations -->
+        <b-col v-if="k === 'sheet1'" class="d-flex flex-column">
+          <b-row class="flex-grow-1 gap-1 mr-1">
+            <template v-for="(v, k) in observations">
+              <b-card v-if="v" :key="k" class="flex-grow-1 observation" body-class="px-2 py-1">
+                {{ k }}
+              </b-card>
+            </template>
+          </b-row>
+        </b-col>
+        <!-- Questions -->
+        <b-col v-if="k === 'sheet2' && totalQuestions" class="d-flex flex-column">
+          <template v-for="(v, k) in questions">
+            <b-card v-if="v" class="flex-grow-1" header-class="h6 px-2 py-1" body-class="col d-flex flex-column">
+              <template #header>{{ k }}</template>
+              <b-row v-for="i in v" class="flex-grow-1" :key="`${k}-${v}`">
+                <b-card class="flex-grow-1" body-class="px-2 py-1">Question</b-card>
+                <b-card class="flex-grow-1" body-class="px-2 py-1">Answer</b-card>
+              </b-row>
+            </b-card>
+          </template>
+        </b-col>
+      </b-row>
+    </template>
+    <!-- <b-row class="gap-1 flex-grow-1" :class="printable ? 'printable-sheet' : 'sheet'">
       <b-col ref="text-container" class="pr-2 h-100" :class="printable ? '' : 'overflow-auto'"
         :style="`line-height: ${lineSpacing}rem;`">
-        <span class="pre-wrap" :style="`font-size: ${fontSize}pt;`">{{ sheet1Text }}</span>
+        <span class="pre-wrap" :style="`font-size: ${fontSize}pt;`">{{ sheetTexts.sheet1 }}</span>
       </b-col>
       <b-col class="d-flex flex-column h-100">
         <b-row class="flex-grow-1 gap-1 mr-1">
@@ -19,10 +49,11 @@
       </div>
     </b-row>
     <div v-if="downloading && (totalQuestions || sheet2Text)" class="mb-2 p-2"></div>
-    <b-row v-if="totalQuestions || sheet2Text" class="gap-1" :class="printable ? 'printable-sheet' : 'sheet'">
+    <b-row v-if="totalQuestions || sheetTexts.sheet2" class="gap-1" :class="printable ? 'printable-sheet' : 'sheet'">
       <b-col class="d-flex flex-column gap-1 mr-1">
-        <span v-if="sheet2Text" class="pre-wrap" :style="`font-size: ${fontSize}pt; line-height: ${lineSpacing}rem;`">{{
-          sheet2Text }}</span>
+        <span v-if="sheetTexts.sheet2" class="pre-wrap"
+          :style="`font-size: ${fontSize}pt; line-height: ${lineSpacing}rem;`">{{
+            sheetTexts.sheet2 }}</span>
         <template v-for="(v, k) in questions">
           <b-card v-if="v" class="flex-grow-1" header-class="h6" body-class="col d-flex flex-column">
             <template #header>{{ k }}</template>
@@ -33,7 +64,7 @@
           </b-card>
         </template>
       </b-col>
-    </b-row>
+    </b-row> -->
   </b-col>
 </template>
 <script>
@@ -42,9 +73,20 @@ import { mapState, mapMutations } from "vuex"
 export default {
   data() {
     return {
-      sheet1Text: "",
-      sheet2Text: "",
-      textContainer: null
+      sheetTexts: {
+        sheet1: "",
+        sheet2: "",
+        sheet3: "",
+        sheet4: "",
+        sheet5: "",
+        sheet6: "",
+        sheet7: "",
+        sheet8: "",
+        sheet9: "",
+        sheet10: "",
+      },
+      textContainers: [],
+      numOfSheets: 1
     }
   },
   computed: {
@@ -66,27 +108,44 @@ export default {
   },
   watch: {
     text() {
-      this.trimText()
+      this.trimText(1)
     },
     fontSize() {
-      this.trimText()
+      this.trimText(1)
     },
     lineSpacing() {
-      this.trimText()
+      this.trimText(1)
+    },
+    totalQuestions() {
+      this.trimText(2)
     }
   },
   methods: {
     ...mapMutations(["setDownloading", "setPrintable"]),
-    async trimText() {
-      this.sheet1Text = this.text
-      this.sheet2Text = ""
+    async trimText(sheet) {
+      // console.log("Sheet: " + sheet);
+      if (sheet === 1)
+        this.sheetTexts[`sheet${sheet}`] = this.text
       await this.$nextTick()
-      while (this.textContainer.scrollHeight - this.textContainer.clientHeight > 0) {
-        let last_sentence = this.sheet1Text.lastIndexOf(".", this.sheet1Text.lastIndexOf(".") - 1) + 1;
-        this.sheet1Text = this.sheet1Text.substring(0, last_sentence);
-        this.sheet2Text = this.text.substring(last_sentence).trim()
+      // console.log(this.textContainers[sheet - 1]);
+      while (
+        this.textContainers[sheet - 1].scrollHeight - this.textContainers[sheet - 1].clientHeight > 0
+      ) {
+        // console.log(`Scroll Diff: ${this.textContainers[sheet - 1].scrollHeight - this.textContainers[sheet - 1].clientHeight}`);
+        let lastSentenctIndex = this.sheetTexts[`sheet${sheet}`].lastIndexOf(".", this.sheetTexts[`sheet${sheet}`].lastIndexOf(".") - 1) + 1;
+        if (lastSentenctIndex === 0) break
+        let lastSentence = this.sheetTexts[`sheet${sheet}`].substring(lastSentenctIndex).trim()
+        // console.log("Last Sentence: " + lastSentence);
+        this.sheetTexts[`sheet${sheet + 1}`] = `${lastSentence} ${this.sheetTexts[`sheet${sheet + 1}`] || ''}`
+        this.sheetTexts[`sheet${sheet}`] = this.sheetTexts[`sheet${sheet}`].substring(0, lastSentenctIndex);
+        // console.log("Trimmed Sheet Text: " + this.sheetTexts[`sheet${sheet}`]);
         await this.$nextTick()
       }
+      // console.log(this.sheetTexts[`sheet${sheet + 1}`]);
+      // console.log(Object.keys(this.sheetTexts).length)
+      // console.log(this.textContainers)
+      if (this.textContainers.length > sheet)
+        this.trimText(sheet + 1)
     },
     onDownload() {
       this.setDownloading(true)
@@ -109,7 +168,7 @@ export default {
     }
   },
   mounted() {
-    this.textContainer = this.$refs["text-container"]
+    this.textContainers = this.$refs["textContainer"]
   }
 }
 </script>

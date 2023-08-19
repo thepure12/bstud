@@ -88,7 +88,7 @@ body {
   overflow-x: auto;
 }
 
-.app-container,
+
 .sheet {
   display: flex;
   margin: 1rem;
@@ -112,7 +112,7 @@ body {
     padding-inline: 1rem;
   }
 
-  .app-container,
+
   .sheet {
     height: unset;
     aspect-ratio: calc(8.5/11);
@@ -136,11 +136,4 @@ body {
       content: "Switch to landscape for better preview";
     }
   }
-
-  @media (orientation: landscape) {
-    .app-container {
-      height: calc(100vh - 5.5rem);
-    }
-  }
-
 }
