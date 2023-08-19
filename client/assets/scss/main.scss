@@ -3,6 +3,10 @@ $theme-colors: (
   "secondary": slateblue,
 );
 
+:root {
+  --scale: 1;
+}
+
 @import '~bootstrap/scss/bootstrap';
 @import '~bootstrap-vue/src/index.scss';
 
@@ -52,16 +56,17 @@ body {
 /* width */
 *::-webkit-scrollbar {
   width: .25rem;
+  height: .25rem;
 }
 
 /* Track */
 *::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px var(--dark);
+  box-shadow: inset 0 0 5px var(--gray-dark);
   border-radius: 10px;
 }
 
 /* Handle */
-.col::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   background: var(--secondary);
   border-radius: 10px;
 }
@@ -109,7 +114,7 @@ body {
 @media only screen and (max-width: 11in) {
 
   .scrolltainer {
-    padding-inline: 1rem;
+    // padding-inline: 1rem;
   }
 
   #sheets {
@@ -138,6 +143,18 @@ body {
       text-align: center;
       width: 100%;
       content: "Switch to landscape for better preview";
+    }
+  }
+
+  @media (orientation: landscape) {
+
+
+
+    @media (min-width: 600px) and (max-width: 1100px) {
+      #sheets {
+        transform: scale(var(--scale));
+        transform-origin: top left;
+      }
     }
   }
 }

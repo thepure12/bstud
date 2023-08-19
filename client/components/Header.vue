@@ -7,9 +7,9 @@
         <b-form class="flex-grow-1" @submit.prevent="onSearch">
             <b-input-group class="search-group">
                 <b-form-input v-model="search" type="search" placeholder="Search"></b-form-input>
-                <template #prepend>
+                <!-- <template #prepend>
                     <b-btn class="print" @click="$store.commit('setPrintable', true)">Print</b-btn>
-                </template>
+                </template> -->
                 <template #append>
                     <b-btn type="submit">Search</b-btn>
                 </template>
