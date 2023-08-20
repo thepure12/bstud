@@ -13,8 +13,8 @@
                     @input="v => setTextOption({ option: 'include-footnotes', value: v })"
                     size="lg">Footnotes</b-form-checkbox>
                 <b-form-group :label="`Font Size: ${fontSize}`" label-size="lg">
-                    <b-form-input :value="fontSize" type="range" min="7" max="24" @update="setFontSize"
-                        debounce="1000" :disabled="trimming"></b-form-input>
+                    <b-form-input :value="fontSize" type="range" min="7" max="24" @update="setFontSize" debounce="1000"
+                        :disabled="trimming"></b-form-input>
                 </b-form-group>
                 <b-form-group :label="`Line Spacing: ${lineSpacing}`" label-size="lg">
                     <b-form-input :value="lineSpacing" type="range" :min="lhMin" max="3" step=".1" @update="setLineSpacing"
@@ -35,12 +35,23 @@
             </b-form>
         </b-card>
         <b-card bg-variant="dark" header-class="bg-secondary h5">
-            <template #header>Questions</template>
+            <template #header>Interpretive Questions</template>
             <b-form>
                 <template v-for="(v, k) in questions">
                     <b-form-group :label="`${k}: ${v}`" label-size="lg">
                         <b-form-input :value="v" type="range" min="0" max="5" step="1"
                             @update="v => setQuestion({ question: k, value: v })"></b-form-input>
+                    </b-form-group>
+                </template>
+            </b-form>
+        </b-card>
+        <b-card bg-variant="dark" header-class="bg-secondary h5">
+            <template #header>Applications</template>
+            <b-form>
+                <template v-for="(v, k) in applications">
+                    <b-form-group :label="`${k}: ${v}`" label-size="lg">
+                        <b-form-input :value="v" type="range" min="0" max="5" step="1"
+                            @update="v => setApplication({ application: k, value: v })"></b-form-input>
                     </b-form-group>
                 </template>
             </b-form>
@@ -54,7 +65,7 @@ export default {
         return {}
     },
     computed: {
-        ...mapState(["textOptions", "observations", "questions", "fontSize", "lineSpacing", "trimming"]),
+        ...mapState(["textOptions", "observations", "questions", "applications", "fontSize", "lineSpacing", "trimming"]),
         lhMin() {
             return .1
         },
@@ -63,7 +74,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations(["setTextOption", "setObservation", "setQuestion", "setFontSize", "setLineSpacing"]),
+        ...mapMutations(["setTextOption", "setObservation", "setQuestion", "setApplication", "setFontSize", "setLineSpacing"]),
     }
 }
 </script>
