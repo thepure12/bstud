@@ -34,8 +34,15 @@
       </template>
 
     </b-col>
-    <div v-if="text && !printable" class="fixed-bottom p-2 pr-4">
-      <b-btn class="float-right" @click="onDownload">
+    <div v-if="text && !printable" class="fixed-bottom d-flex justify-content-end gap-1 p-2 pr-4">
+      <b-btn class="btn-rotate" @click="rotateDevice">
+        <b-iconstack>
+          <b-icon stacked icon="phone" scale="0.6"></b-icon>
+          <b-icon stacked icon="arrow-clockwise" scale="1.5"></b-icon>
+        </b-iconstack>
+
+      </b-btn>
+      <b-btn @click="onDownload">
         <b-icon icon="download" animation="cylon-vertical"></b-icon>
       </b-btn>
     </div>
@@ -43,12 +50,15 @@
 </template>
 <script>
 import { mapState, mapMutations } from "vuex"
-import { BIcon, BIconDownload } from 'bootstrap-vue'
+import { BIcon, BIconDownload, BIconPhone, BIconstack, BIconArrowClockwise } from 'bootstrap-vue'
 
 export default {
   components: {
     BIcon,
-    BIconDownload
+    BIconstack,
+    BIconDownload,
+    BIconPhone,
+    BIconArrowClockwise
   },
   data() {
     return {
@@ -104,29 +114,21 @@ export default {
     async trimText(sheet) {
       if (sheet === 1 && this.trimming) return
       this.setTrimming(true)
-      // console.log("Sheet: " + sheet);
       if (sheet === 1) {
         this.resetSheetText()
         this.sheetTexts[`sheet${sheet}`] = this.text
       }
       await this.$nextTick()
-      // console.log(this.textContainers[sheet - 1]);
       while (
         this.textContainers[sheet - 1].scrollHeight - this.textContainers[sheet - 1].clientHeight > 0
       ) {
-        // console.log(`Scroll Diff: ${this.textContainers[sheet - 1].scrollHeight - this.textContainers[sheet - 1].clientHeight}`);
         let lastSentenctIndex = this.sheetTexts[`sheet${sheet}`].lastIndexOf(".", this.sheetTexts[`sheet${sheet}`].lastIndexOf(".") - 1) + 1;
         if (lastSentenctIndex === 0) break
         let lastSentence = this.sheetTexts[`sheet${sheet}`].substring(lastSentenctIndex).trim()
-        // console.log("Last Sentence: " + lastSentence);
         this.sheetTexts[`sheet${sheet + 1}`] = `${lastSentence} ${this.sheetTexts[`sheet${sheet + 1}`] || ''}`
         this.sheetTexts[`sheet${sheet}`] = this.sheetTexts[`sheet${sheet}`].substring(0, lastSentenctIndex);
-        // console.log("Trimmed Sheet Text: " + this.sheetTexts[`sheet${sheet}`]);
         await this.$nextTick()
       }
-      // console.log(this.sheetTexts[`sheet${sheet + 1}`]);
-      // console.log(Object.keys(this.sheetTexts).length)
-      // console.log(this.textContainers)
       if (this.textContainers.length > sheet)
         this.trimText(sheet + 1)
       else
@@ -148,6 +150,18 @@ export default {
         scale = getComputedStyle(root).getPropertyValue("--scale")
         await this.$nextTick()
       }
+    },
+    rotateDevice() {
+      if (screen.orientation.type === "landscape-primary") {
+        document.exitFullscreen()
+      } else {
+        document.exitFullscreen()
+        document.body.requestFullscreen()
+          .then(() => screen.orientation.lock("landscape-primary")
+            // .then(() => document.exitFullscreen())
+            .catch())
+      }
+
     },
     onDownload() {
       this.setDownloading(true)

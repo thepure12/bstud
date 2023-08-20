@@ -14,6 +14,10 @@ body {
   margin: 0;
 }
 
+body::backdrop {
+  background-color: white;
+}
+
 .pre-wrap {
   white-space: pre-wrap;
 }
@@ -105,10 +109,18 @@ body {
   height: 8.5in;
 }
 
+.fixed-bottom {
+  z-index: 100;
+}
+
 .printable,
 .printable-sheet {
   display: flex;
   height: 7.77in;
+}
+
+.btn-rotate {
+  display: none;
 }
 
 @media only screen and (max-width: 11in) {
@@ -124,6 +136,10 @@ body {
 
   .sheet {
     aspect-ratio: calc(8.5/11);
+  }
+
+  .btn-rotate {
+    display: inline-block;
   }
 
   @media (orientation: portrait) {
@@ -147,8 +163,13 @@ body {
   }
 
   @media (orientation: landscape) {
+    *:not(:fullscreen) .btn-rotate {
+      display: none;
+    }
 
-
+    *:fullscreen .btn-rotate {
+      display: inline-block !important;
+    }
 
     @media (min-width: 600px) and (max-width: 1100px) {
       #sheets {
