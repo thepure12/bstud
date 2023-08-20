@@ -7,9 +7,10 @@
           <b-col class="overflow-auto mr-2">
             <span class="pre-wrap" :style="`font-size: ${fontSize}pt; line-height: ${lineSpacing}rem;`">{{ text }}</span>
           </b-col>
-          <!-- Observations -->
+          <!-- Observations / Main Point -->
           <b-col v-if="k === 'sheet1'" class="d-flex flex-column">
             <b-row class="flex-grow-1 gap-1 mr-1">
+              <b-card class="w-100" body-class="px-2 py-1">Main Point</b-card>
               <template v-for="(v, k) in observations">
                 <b-card v-if="v" :key="k" class="flex-grow-1 observation" body-class="px-2 py-1">
                   {{ k }}
@@ -22,7 +23,7 @@
             <template v-for="(v, k) in questions">
               <b-card v-if="v" class="flex-grow-1" header-class="h6 px-2 py-1" body-class="col d-flex flex-column">
                 <template #header>{{ k }}</template>
-                <b-row v-for="i in v" class="flex-grow-1" :key="`${k}-${v}`">
+                <b-row v-for="i in v" class="flex-grow-1" :key="`${k}-${i}`">
                   <b-card class="flex-grow-1" body-class="px-2 py-1">Question</b-card>
                   <b-card class="flex-grow-1" body-class="px-2 py-1">Answer</b-card>
                 </b-row>
@@ -105,8 +106,9 @@ export default {
     lineSpacing() {
       this.trimText(1)
     },
-    totalQuestions() {
-      this.trimText(1)
+    totalQuestions(oldVal, newVal) {
+      if (oldVal === 0 || newVal == 0)
+        this.trimText(1)
     }
   },
   methods: {
