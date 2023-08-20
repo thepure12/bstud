@@ -28,8 +28,13 @@ export const state = () => ({
     },
     questions: {
         Definitive: 0,
-        Rationale: 0,
-        Implicational: 0
+        Rational: 0,
+        Implicational: 0,
+    },
+    applications: {
+        Head: 0,
+        Heart: 0,
+        Hands: 0,
     },
     passages: [],
     printable: false,
@@ -63,6 +68,9 @@ export const mutations = {
     },
     setQuestion(state, { question, value }) {
         state.questions[question] = parseInt(value)
+    },
+    setApplication(state, { application, value }) {
+        state.applications[application] = value
     },
     setTrimming(state, trimming) {
         state.trimming = trimming
