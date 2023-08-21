@@ -2,7 +2,7 @@
   <div>
     <b-col id="sheets" class="d-flex flex-column gap-1">
       <template v-for="(text, k) in sheetTexts">
-        <b-row v-if="isSheetVisible(text, k)" :id="k" class="flex-grow-1 overflow-auto" :key="k" :ref="`textContainer`"
+        <b-row v-if="isSheetVisible(text, k)" :id="k" class="flex-grow-1 gap-1 overflow-auto" :key="k" :ref="`textContainer`"
           :class="printable ? 'printable-sheet' : 'sheet'">
           <b-col v-if="text || k === 'sheet1'" class="overflow-auto mr-2">
             <span class="pre-wrap" :style="`font-size: ${fontSize}pt; line-height: ${lineSpacing}rem;`">{{ text }}</span>
