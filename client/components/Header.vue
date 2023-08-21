@@ -11,7 +11,8 @@
         </b-navbar-brand> -->
         <b-form class="flex-grow-1" @submit.prevent="onSearch">
             <b-input-group>
-                <b-form-input v-model="search" type="search" placeholder="Search"></b-form-input>
+                <b-form-input :value="textOptions.q" @input="onSearchInput" type="search"
+                    placeholder="Search"></b-form-input>
                 <template #prepend>
                     <!-- <b-btn class="print" @click="$store.commit('setPrintable', true)">Print</b-btn> -->
                     <b-btn v-b-toggle:menu>
@@ -82,8 +83,11 @@ export default {
         }
     },
     methods: {
+        onSearchInput(v) {
+            this.$store.commit("setTextOption", { option: "q", value: v })
+        },
         onSearch() {
-            this.$store.commit("setTextOption", { option: "q", value: this.search })
+            // this.$store.commit("setTextOption", { option: "q", value: this.search })
             this.$store.dispatch("fetchText")
         },
         onShare() {
@@ -105,7 +109,7 @@ export default {
             }, 200)
 
         }
-    }
+    },
 }
 </script>
 <style scoped>

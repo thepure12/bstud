@@ -80,15 +80,20 @@ export const mutations = {
 export const actions = {
     async fetchText({ commit, state }) {
         let passages = []
+        let query = state.textOptions.q
         await this.$axios.get("text", {
             params: state.textOptions
         })
             .then(res => {
                 if (res.data.errors) passages = [`Passage not found.\n${state.textOptions.q}`]
                 else if (res.data.passages.length == 0) passages = [`Passage not found.\n${state.textOptions.q}`]
-                else passages = res.data.passages
+                else {
+                    passages = res.data.passages
+                    query = res.data.query.replace("\u2013", "-")
+                }
             })
             .catch(err => passages = [`Passage not found.\n${state.textOptions.q}`])
         commit("setPassages", passages)
+        commit("setTextOption", { option: "q", value: query })
     }
 }
