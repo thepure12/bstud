@@ -1,7 +1,7 @@
 export const state = () => ({
     textOptions: {
-        // "q": "Romans 8:31-39",
-        q: "Gen 1",
+        "q": "Romans 8:31-39",
+        // q: "Gen 1",
         "include-passage-references": true,
         "include-footnotes": false,
         "include-headings": false
@@ -70,7 +70,7 @@ export const mutations = {
         state.questions[question] = parseInt(value)
     },
     setApplication(state, { application, value }) {
-        state.applications[application] = value
+        state.applications[application] = parseInt(value)
     },
     setTrimming(state, trimming) {
         state.trimming = trimming

@@ -97,6 +97,17 @@ body::backdrop {
   overflow-x: auto;
 }
 
+.card-body {
+  font-size: 10pt;
+  font-weight: bold;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.new-sheet {
+  border-top: 1px dashed steelblue;
+}
 
 .sheet {
   display: flex;

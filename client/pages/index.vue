@@ -2,34 +2,18 @@
   <div>
     <b-col id="sheets" class="d-flex flex-column gap-1">
       <template v-for="(text, k) in sheetTexts">
-        <b-row v-if="text || k === 'sheet1'" :id="k" class="flex-grow-1 overflow-auto" :key="k" :ref="`textContainer`"
+        <b-row v-if="isSheetVisible(text, k)" :id="k" class="flex-grow-1 overflow-auto" :key="k" :ref="`textContainer`"
           :class="printable ? 'printable-sheet' : 'sheet'">
-          <b-col class="overflow-auto mr-2">
+          <b-col v-if="text || k === 'sheet1'" class="overflow-auto mr-2">
             <span class="pre-wrap" :style="`font-size: ${fontSize}pt; line-height: ${lineSpacing}rem;`">{{ text }}</span>
           </b-col>
-          <!-- Observations / Main Point -->
-          <b-col v-if="k === 'sheet1'" class="d-flex flex-column">
-            <b-row class="flex-grow-1 gap-1 mr-1">
-              <b-card class="w-100" body-class="px-2 py-1">Main Point</b-card>
-              <template v-for="(v, k) in observations">
-                <b-card v-if="v" :key="k" class="flex-grow-1 observation" body-class="px-2 py-1">
-                  {{ k }}
-                </b-card>
-              </template>
-            </b-row>
-          </b-col>
+          <!-- Observations -->
+          <Observations v-if="k === 'sheet1'"></Observations>
           <!-- Questions -->
-          <b-col v-if="k === 'sheet2' && totalQuestions" class="d-flex flex-column">
-            <template v-for="(v, k) in questions">
-              <b-card v-if="v" class="flex-grow-1" header-class="h6 px-2 py-1" body-class="col d-flex flex-column">
-                <template #header>{{ k }}</template>
-                <b-row v-for="i in v" class="flex-grow-1" :key="`${k}-${i}`">
-                  <b-card class="flex-grow-1" body-class="px-2 py-1">Question</b-card>
-                  <b-card class="flex-grow-1" body-class="px-2 py-1">Answer</b-card>
-                </b-row>
-              </b-card>
-            </template>
-          </b-col>
+          <Questions v-if="k === 'sheet2' && totalQuestions"></Questions>
+          <!-- Applications -->
+          <Applications v-if="k === 'sheet2' && !text && totalApplications"></Applications>
+          <Applications v-if="k === 'sheet3' && totalApplications"></Applications>
         </b-row>
         <div v-if="downloading" class="mb-2 p-2"></div>
       </template>
@@ -80,7 +64,18 @@ export default {
     }
   },
   computed: {
-    ...mapState(["textOptions", "observations", "questions", "passages", "fontSize", "printable", "downloading", "lineSpacing", "trimming"]),
+    ...mapState([
+      "textOptions",
+      "observations",
+      "questions",
+      "applications",
+      "passages",
+      "fontSize",
+      "printable",
+      "downloading",
+      "lineSpacing",
+      "trimming"
+    ]),
     text() {
       let text = this.passages.join("\n\n")
         .replace(/\n +/gm, "\n")
@@ -91,6 +86,9 @@ export default {
     },
     totalQuestions() {
       return Object.values(this.questions).reduce((a, b) => a + b, 0)
+    },
+    totalApplications() {
+      return Object.values(this.applications).reduce((a, b) => a + b, 0)
     },
     downloadUrl() {
       return `http://localhost:8000/text?${new URLSearchParams(this.textOptions)}&font-size=${this.fontSize}&download`
@@ -107,6 +105,10 @@ export default {
       this.trimText(1)
     },
     totalQuestions(oldVal, newVal) {
+      if (oldVal === 0 || newVal == 0)
+        this.trimText(1)
+    },
+    totalApplications(oldVal, newVal) {
       if (oldVal === 0 || newVal == 0)
         this.trimText(1)
     }
@@ -151,6 +153,22 @@ export default {
         root.style.setProperty("--scale", parseFloat(scale) - .01)
         scale = getComputedStyle(root).getPropertyValue("--scale")
         await this.$nextTick()
+      }
+    },
+    isSheetVisible(text, sheet) {
+      switch (sheet) {
+        case "sheet1":
+          return true
+        case "sheet2":
+          return text != "" || this.totalQuestions > 0 || this.totalApplications > 0
+        case "sheet3":
+          if (text) {
+            return true
+          } else {
+            return this.sheetTexts.sheet2 != "" && this.totalQuestions > 0 && this.totalApplications > 0
+          }
+        default:
+          return text != ""
       }
     },
     rotateDevice() {
@@ -213,16 +231,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.card-body {
-  font-size: 10pt;
-  font-weight: bold;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.new-sheet {
-  border-top: 1px dashed steelblue;
-}
-</style>
