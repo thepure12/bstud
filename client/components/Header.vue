@@ -68,8 +68,10 @@ export default {
             src += `&footnotes=${this.textOptions["include-footnotes"]}`
             for (let settings of [this.observations, this.questions, this.applications]) {
                 for (let [setting, value] of Object.entries(settings)) {
-                    let _setting = setting.split("/")[0].toLocaleLowerCase()
-                    src += `&${_setting}=${value}`
+                    if (value) {
+                        let _setting = setting.split("/")[0].toLocaleLowerCase()
+                        src += `&${_setting}=${value}`
+                    }
                 }
             }
             return src
