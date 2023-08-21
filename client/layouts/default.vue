@@ -18,7 +18,13 @@ export default {
         }
     },
     computed: {
-        ...mapState(["printable", "textOptions", "downloading"])
+        ...mapState([
+            "printable",
+            "downloading",
+            "observations",
+            "questions",
+            "applications"
+        ])
     },
     watch: {
         printable(val) {
@@ -26,7 +32,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations(["setTextOption", "setObservation", "setPrintable"]),
+        ...mapMutations(["setTextOption", "setObservation", "setQuestion", "setApplication", "setPrintable"]),
         doPrint() {
             if (!this.downloading) {
                 this.$nextTick(() => print())
@@ -49,6 +55,23 @@ export default {
             this.setTextOption({ option: "include-passage-references", value: query.references === "true" })
         if (query.footnotes)
             this.setTextOption({ option: "include-footnotes", value: query.footnotes === "true" })
+
+        for (const settings of [
+            { setting: this.observations, mutation: this.setObservation, name: "observation" },
+            { setting: this.questions, mutation: this.setQuestion, name: "question" },
+            { settig: this.applications, mutation: this.setApplication, name: "application" }
+        ]) {
+            for (const setting in settings.setting) {
+                let _setting = setting.split("/")[0].toLocaleLowerCase()
+                // console.log(_setting);
+                if (query[_setting]) {
+                    let value = parseInt(query[_setting]) || query[_setting] === "true"
+                    // console.log(setting)
+                    settings.mutation({ [settings.name]: setting, value: value })
+                }
+            }
+        }
+
         this.$store.dispatch("fetchText")
             .then(() => {
                 this.setPrintable(query.print === "true")
@@ -56,6 +79,4 @@ export default {
     }
 }
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>
