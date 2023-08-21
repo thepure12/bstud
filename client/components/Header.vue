@@ -32,7 +32,7 @@
             footer-class="bg-primary" ok-title="Close" ok-variant="secondary" ok-only centered>
             <img :src="qrURL" class="mx-auto" alt="">
             <b-input-group>
-                <b-form-input :value="shareURL" disabled></b-form-input>
+                <b-form-input :value="shortShare" disabled></b-form-input>
                 <template #append>
                     <b-btn @click="onCopy" :variant="copyVariant">
                         <b-icon icon="clipboard"></b-icon>
@@ -57,7 +57,8 @@ export default {
         return {
             search: "",
             copyVariant: "secondary",
-            copied: false
+            copied: false,
+            shortShare: ""
         }
     },
     computed: {
@@ -86,12 +87,17 @@ export default {
             this.$store.dispatch("fetchText")
         },
         onShare() {
-            this.$bvModal.show("share-modal")
+            this.$axios.post(`/share`, { url: this.shareURL.replaceAll("&", "%26") })
+                .then((res) => {
+                    this.shortShare = res.data.link || this.shareURL
+                    this.$bvModal.show("share-modal")
+                })
+            // this.$bvModal.show("share-modal")
         },
         onCopy() {
             this.copyVariant = "secondary"
             setTimeout(() => {
-                navigator.clipboard.writeText(this.shareURL)
+                navigator.clipboard.writeText(this.shortShare)
                     .then(() => {
                         this.copyVariant = "success"
                         this.copied = 2
