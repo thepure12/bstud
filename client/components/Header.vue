@@ -64,7 +64,7 @@ export default {
         ...mapState(["textOptions", "observations", "questions", "applications"]),
         shareURL() {
             let src = window.location.host + `?search=${this.textOptions.q}`
-            src += `&references=${this.textOptions["include-passage-reference"]}`
+            src += `&references=${this.textOptions["include-passage-references"]}`
             src += `&footnotes=${this.textOptions["include-footnotes"]}`
             for (let settings of [this.observations, this.questions, this.applications]) {
                 for (let [setting, value] of Object.entries(settings)) {
