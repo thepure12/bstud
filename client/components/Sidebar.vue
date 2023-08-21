@@ -1,6 +1,6 @@
 <template>
     <b-sidebar id="menu" header-class="bg-dark" bg-variant="dark" text-variant="white" backdrop-variant="dark"
-        body-class="pb-2" backdrop>
+        body-class="pb-2" width="360px" backdrop>
         <template #title>
             <span>Options</span>
         </template>
@@ -26,17 +26,29 @@
         <b-card bg-variant="dark" header-class="bg-secondary h5">
             <template #header>
                 Observations
+                <b-link href="https://www.knowableword.com/2013/04/12/how-to-study-the-bible/#:~:text=Bible-,Observation"
+                    target="_blank">
+                    <b-icon icon="info-circle" class="ml-2" variant="white" scale=1></b-icon>
+                </b-link>
             </template>
             <b-form>
                 <template v-for="(v, k) in observations">
                     <b-form-checkbox :checked="v" @input="v => setObservation({ observation: k, value: v })" size="lg">
                         {{ k }}
                     </b-form-checkbox>
+
                 </template>
             </b-form>
         </b-card>
         <b-card bg-variant="dark" header-class="bg-secondary h5">
-            <template #header>Interpretive Questions</template>
+            <template #header>
+                Interpretive Questions
+                <b-link
+                    href="https://www.knowableword.com/2013/04/12/how-to-study-the-bible/#:~:text=observation-,Interpretation"
+                    target="_blank">
+                    <b-icon icon="info-circle" class="ml-2" variant="white" scale=1></b-icon>
+                </b-link>
+            </template>
             <b-form>
                 <template v-for="(v, k) in questions">
                     <b-form-group :label="`${k}: ${v}`" label-size="lg">
@@ -47,7 +59,14 @@
             </b-form>
         </b-card>
         <b-card bg-variant="dark" header-class="bg-secondary h5">
-            <template #header>Applications</template>
+            <template #header>
+                Applications
+                <b-link
+                    href="https://www.knowableword.com/2013/04/12/how-to-study-the-bible/#:~:text=commentaries-,Application"
+                    target="_blank">
+                    <b-icon icon="info-circle" class="ml-2" variant="white" scale=1></b-icon>
+                </b-link>
+            </template>
             <b-form>
                 <template v-for="(v, k) in applications">
                     <b-form-group :label="`${k}: ${v}`" label-size="lg">
@@ -61,7 +80,12 @@
 </template>
 <script>
 import { mapMutations, mapState } from 'vuex'
+import { BIcon, BIconInfoCircle } from 'bootstrap-vue'
 export default {
+    components: {
+        BIcon,
+        BIconInfoCircle
+    },
     data() {
         return {}
     },
