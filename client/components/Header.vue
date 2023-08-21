@@ -63,7 +63,7 @@ export default {
     computed: {
         ...mapState(["textOptions", "observations", "questions", "applications"]),
         shareURL() {
-            let src = window.location.host + `?search=${this.textOptions.q}`
+            let src = window.location.host.replace("wwww.", "") + `?search=${this.textOptions.q}`
             src += `&references=${this.textOptions["include-passage-references"]}`
             src += `&footnotes=${this.textOptions["include-footnotes"]}`
             for (let settings of [this.observations, this.questions, this.applications]) {
@@ -74,7 +74,7 @@ export default {
                     }
                 }
             }
-            return src
+            return encodeURI(src)
         },
         qrURL() {
             return "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + this.shareURL
