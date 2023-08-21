@@ -9,11 +9,9 @@
                 Text Options
             </template>
             <b-form>
-                <b-form-checkbox :checked="textOptions['include-passage-references']"
-                    @input="v => setTextOption({ option: 'include-passage-references', value: v })" size="lg"
+                <b-form-checkbox :checked="textOptions['include-passage-references']" @input="onReferencesInput" size="lg"
                     button-variant="secondary">References</b-form-checkbox>
-                <b-form-checkbox :checked="textOptions['include-footnotes']"
-                    @input="v => setTextOption({ option: 'include-footnotes', value: v })"
+                <b-form-checkbox :checked="textOptions['include-footnotes']" @input="onFootnotesInput"
                     size="lg">Footnotes</b-form-checkbox>
                 <b-form-group :label="`Font Size: ${fontSize}`" label-size="lg">
                     <b-form-input :value="fontSize" type="range" min="7" max="24" @update="setFontSize" debounce="1000"
@@ -78,6 +76,15 @@ export default {
     },
     methods: {
         ...mapMutations(["setTextOption", "setObservation", "setQuestion", "setApplication", "setFontSize", "setLineSpacing"]),
+        onReferencesInput(v) {
+            this.setTextOption({ option: 'include-passage-references', value: v })
+            this.$store.dispatch("fetchText")
+        },
+        onFootnotesInput(v) {
+            this.setTextOption({ option: 'include-footnotes', value: v })
+            this.$store.dispatch("fetchText")
+
+        }
     }
 }
 </script>
