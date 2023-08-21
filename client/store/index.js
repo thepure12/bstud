@@ -7,7 +7,7 @@ export const state = () => ({
         "include-headings": false
     },
     observations: {
-        "Repetiton": true,
+        "Repetition": true,
         "Continuity": false,
         "Inclusios": false,
         "Causation": false,
