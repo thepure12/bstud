@@ -53,12 +53,14 @@ export default {
         }
     },
     computed: {
-        ...mapState(["textOptions", "observations", "questions", "applications"]),
+        ...mapState(["textOptions", "observations", "questions", "applications", "fontSize", "lineSpacing"]),
         shareURL() {
-            let src = "https://" + window.location.host.replace("www.", "") + `?search=${this.textOptions.q}`
-            // let src = "https://vatheos.com" + `?search=${this.textOptions.q}`
+            // let src = "https://" + window.location.host.replace("www.", "") + `?search=${this.textOptions.q}`
+            let src = "https://vatheos.com" + `?search=${this.textOptions.q}`
             src += `&references=${this.textOptions["include-passage-references"]}`
             src += `&footnotes=${this.textOptions["include-footnotes"]}`
+            src += `&fontSize=${this.fontSize}`
+            src += `&lineSpacing=${this.lineSpacing}`
             for (let settings of [this.observations, this.questions, this.applications]) {
                 for (let [setting, value] of Object.entries(settings)) {
                     if (value) {

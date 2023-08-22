@@ -23,7 +23,9 @@ export default {
             "downloading",
             "observations",
             "questions",
-            "applications"
+            "applications",
+            "fontSize",
+            "lineSpacing"
         ])
     },
     watch: {
@@ -32,7 +34,15 @@ export default {
         }
     },
     methods: {
-        ...mapMutations(["setTextOption", "setObservation", "setQuestion", "setApplication", "setPrintable"]),
+        ...mapMutations([
+            "setTextOption",
+            "setObservation",
+            "setQuestion",
+            "setApplication",
+            "setPrintable",
+            "setFontSize",
+            "setLineSpacing"
+        ]),
         doPrint() {
             if (!this.downloading) {
                 this.$nextTick(() => print())
@@ -55,6 +65,10 @@ export default {
             this.setTextOption({ option: "include-passage-references", value: query.references === "true" })
         if (query.footnotes)
             this.setTextOption({ option: "include-footnotes", value: query.footnotes === "true" })
+        if (query.fontSize)
+            this.setFontSize(parseInt(query.fontSize) || this.fontSize)
+        if (query.lineSpacing)
+            this.setLineSpacing(parseFloat(query.lineSpacing) || this.lineSpacing)
 
         for (const settings of [
             { setting: this.observations, mutation: this.setObservation, name: "observation" },
