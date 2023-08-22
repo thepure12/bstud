@@ -1,8 +1,12 @@
 <template>
-    <b-sidebar id="menu" header-class="bg-dark" bg-variant="dark" text-variant="white" backdrop-variant="dark"
+    <b-sidebar id="menu" header-class="bg-dark d-flex" bg-variant="dark" text-variant="white" backdrop-variant="dark"
         body-class="pb-2" width="360px" backdrop>
-        <template #title>
-            <span>Options</span>
+        <template #header>
+            <b-row class="flex-nowrap flex-grow-1">
+                <div><strong>Options</strong></div>
+                <BuyMeCoffee></BuyMeCoffee>
+                <b-btn-close text-variant="white" v-b-toggle:menu></b-btn-close>
+            </b-row>
         </template>
         <b-card bg-variant="dark" header-class="bg-secondary h5">
             <template #header>
