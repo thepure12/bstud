@@ -76,7 +76,7 @@ export default {
             .then(() => {
                 this.setPrintable(query.print === "true")
             })
-    }
+    },
 }
 </script>
 <style scoped></style>
