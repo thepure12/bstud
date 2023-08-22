@@ -1,20 +1,10 @@
 <template>
     <b-navbar class="flex-wrap justify-content-start" type="dark" variant="primary" toggleable sticky>
-        <!-- <b-navbar-toggle target="menu" class="bg-secondary text-white py-2">
-            <template #default="{ expanded }">
-                <b-icon icon="gear"></b-icon>
-                Vathéos
-            </template>
-        </b-navbar-toggle> -->
-        <!-- <b-navbar-brand>
-            Vathéos
-        </b-navbar-brand> -->
         <b-form class="flex-grow-1" @submit.prevent="onSearch">
             <b-input-group>
                 <b-form-input :value="textOptions.q" @input="onSearchInput" type="search"
                     placeholder="Search"></b-form-input>
                 <template #prepend>
-                    <!-- <b-btn class="print" @click="$store.commit('setPrintable', true)">Print</b-btn> -->
                     <b-btn v-b-toggle:menu>
                         <b-icon icon="gear"></b-icon>
                         Vathéos
@@ -66,6 +56,7 @@ export default {
         ...mapState(["textOptions", "observations", "questions", "applications"]),
         shareURL() {
             let src = "https://" + window.location.host.replace("www.", "") + `?search=${this.textOptions.q}`
+            // let src = "https://vatheos.com" + `?search=${this.textOptions.q}`
             src += `&references=${this.textOptions["include-passage-references"]}`
             src += `&footnotes=${this.textOptions["include-footnotes"]}`
             for (let settings of [this.observations, this.questions, this.applications]) {
@@ -91,9 +82,10 @@ export default {
             this.$store.dispatch("fetchText")
         },
         onShare() {
-            this.$axios.post(`/share`, { url: this.shareURL.replaceAll("&", "%26") })
+            this.$axios.post(`/share`, { url: this.shareURL })
                 .then((res) => {
                     this.shortShare = res.data.link || this.shareURL
+                    this.$nextTick()
                     this.$bvModal.show("share-modal")
                 })
             // this.$bvModal.show("share-modal")
