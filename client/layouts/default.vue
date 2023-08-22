@@ -59,14 +59,14 @@ export default {
         for (const settings of [
             { setting: this.observations, mutation: this.setObservation, name: "observation" },
             { setting: this.questions, mutation: this.setQuestion, name: "question" },
-            { settig: this.applications, mutation: this.setApplication, name: "application" }
+            { setting: this.applications, mutation: this.setApplication, name: "application" }
         ]) {
             for (const setting in settings.setting) {
                 let _setting = setting.split("/")[0].toLocaleLowerCase()
-                // console.log(_setting);
+                console.log(_setting);
                 if (query[_setting]) {
                     let value = parseInt(query[_setting]) || query[_setting] === "true"
-                    // console.log(setting)
+                    console.log(settings)
                     settings.mutation({ [settings.name]: setting, value: value })
                 }
             }
