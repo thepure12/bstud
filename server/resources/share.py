@@ -22,7 +22,7 @@ class ShareURL(Resource):
     def post(self, url=""):
         long_url = url
         if long_url:
-            print(long_url)
+            # print(long_url)
             res = requests.post(
                 BITLY_URL,
                 json={
@@ -32,7 +32,7 @@ class ShareURL(Resource):
                 },
                 headers=HEADERS,
             )
-            if res.status_code == 200:
+            if res.status_code in [200, 201]:
                 return {"link": res.json()["link"]}
-            print(res.json())
+            # print(res.json())
         return {"link": ""}
