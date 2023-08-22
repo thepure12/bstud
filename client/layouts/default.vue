@@ -59,6 +59,8 @@ export default {
             this.showHeader = true
         })
         let query = this.$route.query
+
+        // Text options
         if (query.search)
             this.setTextOption({ option: "q", value: query.search })
         if (query.references)
@@ -70,8 +72,17 @@ export default {
         if (query.lineSpacing)
             this.setLineSpacing(parseFloat(query.lineSpacing) || this.lineSpacing)
 
+        // Observations
+        if (query.observations) {
+            const _observations = query.observations.split(",")
+            for (const setting in this.observations) {
+                let _setting = setting.split("/")[0].toLocaleLowerCase()
+                this.setObservation({ observation: setting, value: _observations.includes(_setting) })
+            }
+        }
+
+        // Questions and Applications
         for (const settings of [
-            { setting: this.observations, mutation: this.setObservation, name: "observation" },
             { setting: this.questions, mutation: this.setQuestion, name: "question" },
             { setting: this.applications, mutation: this.setApplication, name: "application" }
         ]) {
