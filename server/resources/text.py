@@ -39,12 +39,20 @@ class PassageText(Resource):
     def get(self):
         version = self.params.get("version", "ESV")
 
-        if version=="ESV":
+        if version == "ESV":
             res = requests.get(ESV_URL, headers=HEADERS, params=self.params)
             return res.json()
         else:
-            return gateway_scrape.getText(search=self.params.q, version=version)
-            
+            kwargs = {
+                "headings": self.params.get("include-headings") == "true",
+                "footnotes": self.params.get("include-footnotes") == "true",
+                "chapter_refs": self.params.get("include-passage-references", "true")
+                == "true",
+                "cross_refs": self.params.get("include-cross-references") == "true",
+            }
+            return gateway_scrape.getText(
+                search=self.params.q, version=version, **kwargs
+            )
 
         # if "download" in self.params:
         #     html_path = os.path.abspath("worksheet.html")
@@ -68,4 +76,3 @@ class PassageText(Resource):
         #         f"{self.params.q}.pdf" if self.params.q else "bible_study_worksheet.pdf"
         #     )
         #     return static_file("out.pdf", "./", download=filename)
-            
