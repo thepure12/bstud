@@ -4,10 +4,13 @@
         <template #header>
             <b-row class="flex-nowrap flex-grow-1">
                 <div><strong>Options</strong></div>
-                <BuyMeCoffee></BuyMeCoffee>
                 <b-btn-close text-variant="white" v-b-toggle:menu></b-btn-close>
             </b-row>
         </template>
+        <b-row class="gap-1 mt-1 mb-2">
+            <BuyMeCoffee btn-class="flex-grow"></BuyMeCoffee>
+            <b-btn to="/feedback" class="flex-grow-1 text-white">Give Feedback</b-btn>
+        </b-row>
         <b-card bg-variant="dark" header-class="bg-secondary h5">
             <template #header>
                 Text Options
