@@ -8,8 +8,8 @@
             </b-row>
         </template>
         <b-row class="gap-1 mt-1 mb-2">
-            <BuyMeCoffee btn-class="flex-grow"></BuyMeCoffee>
-            <b-btn to="/feedback" class="flex-grow-1 text-white">Give Feedback</b-btn>
+            <BuyMeCoffee></BuyMeCoffee>
+            <b-btn to="/feedback" class="flex-grow-1" variant="primary">Give Feedback</b-btn>
         </b-row>
         <b-card bg-variant="dark" header-class="bg-secondary h5">
             <template #header>
@@ -28,6 +28,8 @@
                     <b-form-input :value="lineSpacing" type="range" :min="lhMin" max="3" step=".1" @update="setLineSpacing"
                         debounce="1000" :disabled="trimming"></b-form-input>
                 </b-form-group>
+                <b-form-radio-group :checked="textOptions.version" :options="versions" class="w-100"
+                    button-variant="primary" buttons @change="onVersionChange"></b-form-radio-group>
             </b-form>
         </b-card>
         <b-card bg-variant="dark" header-class="bg-secondary h5">
@@ -94,7 +96,9 @@ export default {
         BIconInfoCircle
     },
     data() {
-        return {}
+        return {
+            versions: ["ESV", "CSB", "NIV", "KJV", "NKJV"]
+        }
     },
     computed: {
         ...mapState(["textOptions", "observations", "questions", "applications", "fontSize", "lineSpacing", "trimming"]),
@@ -115,6 +119,10 @@ export default {
             this.setTextOption({ option: 'include-footnotes', value: v })
             this.$store.dispatch("fetchText")
 
+        },
+        onVersionChange(v) {
+            this.setTextOption({ option: 'version', value: v })
+            this.$store.dispatch("fetchText")
         }
     }
 }
