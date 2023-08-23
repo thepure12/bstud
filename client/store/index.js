@@ -4,7 +4,8 @@ export const state = () => ({
         // q: "Gen 1",
         "include-passage-references": true,
         "include-footnotes": false,
-        "include-headings": false
+        "include-headings": false,
+        "version": "ESV"
     },
     observations: {
         "Repetition": true,
