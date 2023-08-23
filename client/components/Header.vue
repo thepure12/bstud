@@ -61,6 +61,7 @@ export default {
             src += `&footnotes=${this.textOptions["include-footnotes"]}`
             src += `&fontSize=${this.fontSize}`
             src += `&lineSpacing=${this.lineSpacing}`
+            src += `&version=${this.textOptions.version}`
             // Observations
             src += "&observations="
             src += Object.keys(this.observations)
