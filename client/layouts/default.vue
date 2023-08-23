@@ -71,6 +71,9 @@ export default {
             this.setFontSize(parseInt(query.fontSize) || this.fontSize)
         if (query.lineSpacing)
             this.setLineSpacing(parseFloat(query.lineSpacing) || this.lineSpacing)
+        if (query.version) {
+            this.setTextOption({option: "version", value: query.version})
+        }
 
         // Observations
         if (query.observations) {
