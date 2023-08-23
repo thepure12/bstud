@@ -1,4 +1,5 @@
 attrs==23.1.0
+beautifulsoup4==4.12.2
 bottle==0.12.25
 bottle-cors2==0.0.1
 bottle-jwt3==0.0.1
