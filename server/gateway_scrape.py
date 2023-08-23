@@ -17,7 +17,7 @@ class PassageSoup(bs4.BeautifulSoup):
         self.query = "; ".join(
             [e.text for e in self.find_all("div", {"class": "bcv"})]
         ).strip()
-        self.copyright = self.find("div", {"class": "copyright-table"}).text.strip()
+        self.copyright = self.find("div", {"class": "publisher-info-bottom"}).find("p").text.strip()
         self.chapter_nums = self.find_all("span", {"class": "chapternum"})
         self.full_chapter_link = self.find("a", {"class": "full-chap-link"})
 
