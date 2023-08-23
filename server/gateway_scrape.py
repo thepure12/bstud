@@ -8,7 +8,7 @@ try:
     config = toml.load("config.toml")
     URL = config["gateway_url"]
 except:
-    URL = os.environ.get("GATEWAT_URL")
+    URL = os.environ.get("GATEWAY_URL")
 
 
 class PassageSoup(bs4.BeautifulSoup):
