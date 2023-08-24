@@ -118,8 +118,10 @@ export default {
             }
             if (this.textContainers.length > sheet)
                 this.trimText(sheet + 1)
-            else
+            else {
                 this.setTrimming(false)
+                this.$emit("trimmed")
+            }
         },
         resetSheetText() {
             for (const [sheet, value] of Object.entries(this.sheetTexts)) {

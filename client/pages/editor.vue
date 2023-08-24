@@ -1,10 +1,34 @@
 <template>
     <div class="m-3 ">
-        <b-row v-if="canvas" class="mb-3 justify-content-around border-bottom">
-            <b-form-group label="Color">
-                <verte picker="square" :value="canvas.freeDrawingBrush.color" @input="onColorChange"></verte>
+        <b-row v-if="canvas" class="mb-3 justify-content-around"
+            :style="`border-bottom: ${brushThickness}px solid ${brushColor}`">
+            <b-form-group class="my-auto">
+                <b-btn to="/">
+                    <b-icon icon="arrow-left"></b-icon>
+                </b-btn>
             </b-form-group>
-            <b-form-group label="Thickness" :style="`border-bottom: ${brushThickness}px solid ${brushColor}`">
+            <b-form-group label="Color">
+                <b-row class="gap-2">
+                    <verte ref="verte" picker="square" :value="brushColor" @input="onColorChange"
+                        :colorHistory.sync="brushColorHistory"></verte>
+                    <b-row class="gap-2">
+                        <div>
+                            <b-icon icon="circle-fill" scale="1.2" :style="`color: ${brushColorHistory[0]};`"
+                                @click="onColorChange(brushColorHistory[0])"></b-icon>
+                        </div>
+                        <div>
+                            <b-icon icon="circle-fill" scale="1.2" :style="`color: ${brushColorHistory[1]};`"
+                                @click="onColorChange(brushColorHistory[1])"></b-icon>
+                        </div>
+                        <div>
+                            <b-icon icon="circle-fill" scale="1.2" :style="`color: ${brushColorHistory[2]};`"
+                                @click="onColorChange(brushColorHistory[2])"></b-icon>
+                        </div>
+                    </b-row>
+
+                </b-row>
+            </b-form-group>
+            <b-form-group label="Thickness">
                 <b-form-input type="range" :value="canvas.freeDrawingBrush.width" @input="onThicknessChange" min="1"
                     max="50" step="1"></b-form-input>
             </b-form-group>
@@ -22,12 +46,16 @@
                     <b-popover target="trash" triggers="click blur" placement="bottom">
                         <b-btn @click="onTrash">Erase All</b-btn>
                     </b-popover>
+                    <b-btn @click="onToggleFullscreen">
+                        <b-icon v-if="isFullscreen" icon="fullscreen-exit"></b-icon>
+                        <b-icon v-else icon="fullscreen"></b-icon>
+                    </b-btn>
                 </b-row>
             </b-form-group>
         </b-row>
         <div id="canvas-container" class="mx-auto">
-            <div class="position-absolute">
-                <Sheets :textContainers.sync="textContainers"></Sheets>
+            <div id="sheets-container" class="position-absolute">
+                <Sheets :textContainers.sync="textContainers" @trimmed="onTextTrimmed"></Sheets>
             </div>
             <canvas class="mt-3" id="canvas" ref="canvas">
             </canvas>
@@ -38,7 +66,16 @@
 <script>
 import Verte from 'verte';
 import 'verte/dist/verte.css';
-import { BIcon, BIconArrow90degLeft, BIconArrow90degRight, BIconTrash } from 'bootstrap-vue'
+import {
+    BIcon,
+    BIconArrow90degLeft,
+    BIconArrow90degRight,
+    BIconTrash,
+    BIconFullscreen,
+    BIconFullscreenExit,
+    BIconArrowLeft,
+    BIconCircleFill
+} from 'bootstrap-vue'
 export default {
     head() {
         return {
@@ -58,17 +95,23 @@ export default {
         BIcon,
         BIconArrow90degLeft,
         BIconArrow90degRight,
-        BIconTrash
+        BIconTrash,
+        BIconFullscreen,
+        BIconFullscreenExit,
+        BIconArrowLeft,
+        BIconCircleFill
     },
     data() {
         return {
             textContainers: [],
             canvas: null,
             brush: null,
-            brushColor: "black",
+            brushColor: "#000000",
+            brushColorHistory: ["#4682b4", "#6a5acd", "#ff5733"],
             brushThickness: 1,
             h: [],
             isRedoing: false,
+            isFullscreen: false
         }
     },
     computed: {
@@ -80,7 +123,7 @@ export default {
                 isDrawingMode: true
             })
             this.brush = this.canvas.freeDrawingBrush
-            const container = document.querySelector("#canvas-container")
+            const container = document.querySelector("#sheets-container")
             this.canvas.setDimensions({ width: container.clientWidth, height: container.clientHeight })
             document.querySelector(".canvas-container").style.position = "absolute !important"
             this.canvas.on('object:added', function () {
@@ -89,6 +132,13 @@ export default {
                 }
                 this.isRedoing = false;
             });
+        },
+        onTextTrimmed() {
+            if (this.canvas) {
+                const container = document.querySelector("#sheets-container")
+                this.canvas.setDimensions({ width: container.clientWidth, height: container.clientHeight })
+                console.log("Text trimmed");
+            }
         },
         onColorChange(color) {
             this.canvas.freeDrawingBrush.color = color
@@ -115,6 +165,13 @@ export default {
             this.$root.$emit('bv::hide::popover', 'trash')
             this.canvas._objects.forEach(o => this.h.push(o))
             this.canvas.clear()
+        },
+        onToggleFullscreen() {
+            if (this.isFullscreen)
+                document.exitFullscreen()
+            else
+                document.body.requestFullscreen()
+            this.isFullscreen = !this.isFullscreen
         }
     },
     mounted() {
@@ -125,8 +182,8 @@ export default {
 <style>
 #canvas-container {
     position: relative;
-    width: 11in;
-    height: 8.5in;
+    /* width: 11in;
+    height: 8.5in; */
 }
 
 .canvas-container {

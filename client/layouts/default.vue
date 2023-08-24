@@ -1,6 +1,6 @@
 <template>
     <div id="app" class="d-flex flex-column vh-100">
-        <Header v-if="!printable"></Header>
+        <Header v-if="!printable && showHeader"></Header>
         <div :class="!printable ? 'scrolltainer' : ''">
             <div>
                 <Nuxt />
@@ -14,7 +14,7 @@ import { mapState, mapMutations } from 'vuex'
 export default {
     data() {
         return {
-            showHeader: true
+            // showHeader: true
         }
     },
     computed: {
@@ -26,7 +26,10 @@ export default {
             "applications",
             "fontSize",
             "lineSpacing"
-        ])
+        ]),
+        showHeader() {
+            return this.$route.name != "editor"
+        }
     },
     watch: {
         printable(val) {
@@ -52,12 +55,12 @@ export default {
     created() {
         screen.orientation.lock("landscape").catch(() => { })
         onafterprint = () => this.setPrintable(false)
-        this.$nuxt.$on('hideHeader', () => {
-            this.showHeader = false
-        })
-        this.$nuxt.$on('showHeader', () => {
-            this.showHeader = true
-        })
+        // this.$nuxt.$on('hideHeader', () => {
+        //     this.showHeader = false
+        // })
+        // this.$nuxt.$on('showHeader', () => {
+        //     this.showHeader = true
+        // })
         let query = this.$route.query
 
         // Text options
@@ -72,7 +75,7 @@ export default {
         if (query.lineSpacing)
             this.setLineSpacing(parseFloat(query.lineSpacing) || this.lineSpacing)
         if (query.version) {
-            this.setTextOption({option: "version", value: query.version})
+            this.setTextOption({ option: "version", value: query.version })
         }
 
         // Observations
