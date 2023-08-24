@@ -46,10 +46,11 @@ export default {
         onFootnotesInput(v) {
             this.setTextOption({ option: 'include-footnotes', value: v })
             this.$store.dispatch("fetchText")
-
         },
         onVersionChange(v) {
             this.setTextOption({ option: "version", value: v })
+            this.$store.dispatch("fetchText")
+
         }
     }
 }
