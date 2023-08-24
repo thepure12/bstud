@@ -43,7 +43,7 @@ export const state = () => ({
     fontSize: 10,
     lineSpacing: 1.2,
     trimming: false,
-    versions: ["ESV", "CSB", "NIV", "KJV", "NKJV"]
+    versions: ["ESV", "CSB", "NIV", "KJV", "NKJV"],
 })
 
 export const mutations = {
