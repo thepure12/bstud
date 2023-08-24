@@ -34,6 +34,9 @@
             </b-form-group>
             <b-form-group class="my-auto">
                 <b-row class="gap-1">
+                    <!-- <b-btn @click="onErase">
+                        <b-icon icon="eraser"></b-icon>
+                    </b-btn> -->
                     <b-btn @click="onUndo">
                         <b-icon icon="arrow90deg-left"></b-icon>
                     </b-btn>
@@ -74,7 +77,8 @@ import {
     BIconFullscreen,
     BIconFullscreenExit,
     BIconArrowLeft,
-    BIconCircleFill
+    BIconCircleFill,
+    BIconEraser
 } from 'bootstrap-vue'
 export default {
     head() {
@@ -99,7 +103,8 @@ export default {
         BIconFullscreen,
         BIconFullscreenExit,
         BIconArrowLeft,
-        BIconCircleFill
+        BIconCircleFill,
+        BIconEraser
     },
     data() {
         return {
@@ -165,6 +170,9 @@ export default {
             this.$root.$emit('bv::hide::popover', 'trash')
             this.canvas._objects.forEach(o => this.h.push(o))
             this.canvas.clear()
+        },
+        onErase() {
+            this.canvas.freeDrawingBrush = new fabric.EraserBrush(canvas)
         },
         onToggleFullscreen() {
             if (this.isFullscreen)
