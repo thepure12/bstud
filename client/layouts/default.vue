@@ -94,7 +94,7 @@ export default {
         ]) {
             for (const setting in settings.setting) {
                 let _setting = setting.split("/")[0].toLocaleLowerCase()
-                console.log(_setting);
+                // console.log(_setting);
                 if (query[_setting]) {
                     let value = parseInt(query[_setting]) || query[_setting] === "true"
                     console.log(settings)

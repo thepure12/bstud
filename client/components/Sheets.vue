@@ -14,14 +14,22 @@
                 <!-- Applications -->
                 <Applications v-if="k === 'sheet2' && !text && totalApplications"></Applications>
                 <Applications v-if="k === 'sheet3' && totalApplications"></Applications>
+                <Fabric v-if="drawing" :width="sheetWidth" :height="sheetHeight" :brushColor="brushColor"
+                    :brushWidth="brushWidth"></Fabric>
             </b-row>
         </template>
     </b-col>
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
+import Fabric from './Fabric.vue'
 export default {
-    props: ["textContainers"],
+    props: {
+        textContainers: { type: Array, default: () => { return [] } },
+        drawing: Boolean,
+        brushColor: String,
+        brushWidth: Number
+    },
     data() {
         return {
             sheetTexts: {
@@ -36,7 +44,9 @@ export default {
                 sheet9: "",
                 sheet10: "",
             },
-        }
+            sheetWidth: 100,
+            sheetHeight: 100
+        };
     },
     computed: {
         ...mapState([
@@ -52,33 +62,33 @@ export default {
                 .replace(/\n +/gm, "\n")
                 .replace(/ {2,}/gm, " ")
                 .replace(/\n{2,}/gm, "\n")
-                .trim()
-            return text
+                .trim();
+            return text;
         },
         totalQuestions() {
-            return Object.values(this.questions).reduce((a, b) => a + b, 0)
+            return Object.values(this.questions).reduce((a, b) => a + b, 0);
         },
         totalApplications() {
-            return Object.values(this.applications).reduce((a, b) => a + b, 0)
+            return Object.values(this.applications).reduce((a, b) => a + b, 0);
         }
     },
     watch: {
         text() {
-            this.trimText(1)
+            this.trimText(1);
         },
         fontSize() {
-            this.trimText(1)
+            this.trimText(1);
         },
         lineSpacing() {
-            this.trimText(1)
+            this.trimText(1);
         },
         totalQuestions(oldVal, newVal) {
             if (oldVal === 0 || newVal == 0)
-                this.trimText(1)
+                this.trimText(1);
         },
         totalApplications(oldVal, newVal) {
             if (oldVal === 0 || newVal == 0)
-                this.trimText(1)
+                this.trimText(1);
         }
     },
     methods: {
@@ -86,77 +96,82 @@ export default {
         isSheetVisible(text, sheet) {
             switch (sheet) {
                 case "sheet1":
-                    return true
+                    return true;
                 case "sheet2":
-                    return text != "" || this.totalQuestions > 0 || this.totalApplications > 0
+                    return text != "" || this.totalQuestions > 0 || this.totalApplications > 0;
                 case "sheet3":
                     if (text) {
-                        return true
-                    } else {
-                        return this.sheetTexts.sheet2 != "" && this.totalQuestions > 0 && this.totalApplications > 0
+                        return true;
+                    }
+                    else {
+                        return this.sheetTexts.sheet2 != "" && this.totalQuestions > 0 && this.totalApplications > 0;
                     }
                 default:
-                    return text != ""
+                    return text != "";
             }
         }, async trimText(sheet) {
-            if (sheet === 1 && this.trimming) return
-            this.setTrimming(true)
+            if (sheet === 1 && this.trimming)
+                return;
+            this.setTrimming(true);
             if (sheet === 1) {
-                this.resetSheetText()
-                this.sheetTexts[`sheet${sheet}`] = this.text
+                this.resetSheetText();
+                this.sheetTexts[`sheet${sheet}`] = this.text;
             }
-            await this.$nextTick()
-            while (
-                this.textContainers[sheet - 1].scrollHeight - this.textContainers[sheet - 1].clientHeight > 0
-            ) {
+            await this.$nextTick();
+            while (this.textContainers[sheet - 1].scrollHeight - this.textContainers[sheet - 1].clientHeight > 0) {
                 let lastSentenctIndex = this.sheetTexts[`sheet${sheet}`].lastIndexOf(".", this.sheetTexts[`sheet${sheet}`].lastIndexOf(".") - 1) + 1;
-                if (lastSentenctIndex === 0) break
-                let lastSentence = this.sheetTexts[`sheet${sheet}`].substring(lastSentenctIndex).trim()
-                this.sheetTexts[`sheet${sheet + 1}`] = `${lastSentence} ${this.sheetTexts[`sheet${sheet + 1}`] || ''}`
+                if (lastSentenctIndex === 0)
+                    break;
+                let lastSentence = this.sheetTexts[`sheet${sheet}`].substring(lastSentenctIndex).trim();
+                this.sheetTexts[`sheet${sheet + 1}`] = `${lastSentence} ${this.sheetTexts[`sheet${sheet + 1}`] || ''}`;
                 this.sheetTexts[`sheet${sheet}`] = this.sheetTexts[`sheet${sheet}`].substring(0, lastSentenctIndex);
-                await this.$nextTick()
+                await this.$nextTick();
             }
             if (this.textContainers.length > sheet)
-                this.trimText(sheet + 1)
+                this.trimText(sheet + 1);
             else {
-                this.setTrimming(false)
-                this.$emit("trimmed")
+                this.setTrimming(false);
+                this.$emit("trimmed");
             }
         },
         resetSheetText() {
             for (const [sheet, value] of Object.entries(this.sheetTexts)) {
-                this.sheetTexts[sheet] = ""
+                this.sheetTexts[sheet] = "";
             }
         },
         async scaleSheets() {
-            await this.$nextTick()
-            const scrollTainer = document.querySelector(".scrolltainer")
-            const root = document.querySelector(":root")
-            root.style.setProperty("--scale", 1)
-            let scale = getComputedStyle(root).getPropertyValue("--scale")
+            await this.$nextTick();
+            const scrollTainer = document.querySelector(".scrolltainer");
+            const root = document.querySelector(":root");
+            root.style.setProperty("--scale", 1);
+            let scale = getComputedStyle(root).getPropertyValue("--scale");
             while (scrollTainer.scrollWidth > scrollTainer.clientWidth && scale > 0) {
-                root.style.setProperty("--scale", parseFloat(scale) - .01)
-                scale = getComputedStyle(root).getPropertyValue("--scale")
-                await this.$nextTick()
+                root.style.setProperty("--scale", parseFloat(scale) - .01);
+                scale = getComputedStyle(root).getPropertyValue("--scale");
+                await this.$nextTick();
+                // this.$emit("scaled");
             }
+            this.sheetWidth = this.textContainers[0].clientWidth
+            this.sheetHeight = this.textContainers[0].clientHeight
         },
     },
     created() {
         let portrait = window.matchMedia("(orientation: portrait)");
-        let scaleSheets = this.scaleSheets
-
+        let scaleSheets = this.scaleSheets;
         portrait.addEventListener("change", function (e) {
             if (e.matches) {
                 // Portrait mode
-            } else {
-                scaleSheets()
             }
-        })
+            else {
+                scaleSheets();
+            }
+        });
     },
     mounted() {
-        this.$emit('update:textContainers', this.$refs["textContainer"])
-        this.scaleSheets()
-        this.trimText(1)
-    }
+        this.$emit('update:textContainers', this.$refs["textContainer"]);
+        this.scaleSheets();
+        this.trimText(1);
+    },
+    components: { Fabric }
 }
 </script>
