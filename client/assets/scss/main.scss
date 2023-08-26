@@ -125,6 +125,28 @@ body::backdrop {
   position: relative;
 }
 
+.tool {
+  line-height: 0;
+  padding: .25rem;
+}
+
+.tool.active {
+  // -webkit-box-shadow: 0px 0px 5px 5px rgba(105, 90, 205, 1);
+  // -moz-box-shadow: 0px 0px 5px 5px rgba(105, 90, 205, 1);
+  // box-shadow: 0px 0px 5px 5px rgba(105, 90, 205, 1);
+  border-radius: 100%;
+  background-color: rgba(179, 175, 207, 0.25);
+}
+
+#pencil-picker .verte__controller .slider {
+  display: none;
+}
+
+#saved-color-picker .verte__controller .slider {
+  display: none;
+}
+
+
 .fixed-bottom {
   z-index: 100;
 }
