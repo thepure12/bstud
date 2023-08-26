@@ -53,7 +53,7 @@ export default {
         }
     },
     created() {
-        screen.orientation.lock("landscape").catch(() => { })
+        // screen.orientation.lock("landscape").catch(() => { })
         onafterprint = () => this.setPrintable(false)
         // this.$nuxt.$on('hideHeader', () => {
         //     this.showHeader = false

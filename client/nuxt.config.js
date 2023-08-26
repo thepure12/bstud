@@ -22,18 +22,20 @@ export default {
     ],
     script: [
       { src: "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js", defer: true },
-      { src: "https://unpkg.com/fabric@5.3.0/dist/fabric.min.js" }
+      { src: "https://unpkg.com/fabric@5.3.0/dist/fabric.min.js" },
+      { src: "https://colorjs.io/dist/color.global.js" }
     ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
-    '~/assets/scss/main.scss'
+    '~/assets/scss/main.scss',
+    '@fortawesome/fontawesome-svg-core/styles.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-
+    '~/plugins/fontawesome.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

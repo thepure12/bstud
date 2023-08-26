@@ -15,7 +15,7 @@
                 <Applications v-if="k === 'sheet2' && !text && totalApplications"></Applications>
                 <Applications v-if="k === 'sheet3' && totalApplications"></Applications>
                 <Fabric v-if="drawing" :width="sheetWidth" :height="sheetHeight" :brushColor="brushColor"
-                    :brushWidth="brushWidth"></Fabric>
+                    :brushWidth="brushWidth" @objectAdded="c => $emit('objectAdded', c)"></Fabric>
             </b-row>
         </template>
     </b-col>
@@ -146,7 +146,7 @@ export default {
             root.style.setProperty("--scale", 1);
             let scale = getComputedStyle(root).getPropertyValue("--scale");
             while (scrollTainer.scrollWidth > scrollTainer.clientWidth && scale > 0) {
-                root.style.setProperty("--scale", parseFloat(scale) - .01);
+                root.style.setProperty("--scale", parseFloat(scale) - .015);
                 scale = getComputedStyle(root).getPropertyValue("--scale");
                 await this.$nextTick();
                 // this.$emit("scaled");

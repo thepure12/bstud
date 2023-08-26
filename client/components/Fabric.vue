@@ -45,6 +45,7 @@ export default {
             this.canvas.setDimensions({ width: this.width, height: this.height })
             this.canvas.freeDrawingBrush.color = this.brushColor
             this.canvas.freeDrawingBrush.width = parseInt(this.brushWidth)
+            this.canvas.on("object:added", () => { this.$emit("objectAdded", this.canvas) })
             // this.canvas.on('object:added', function () {
             //     if (!this.isRedoing) {
             //         this.h = [];
