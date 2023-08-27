@@ -15,12 +15,14 @@ export default {
             default: 300
         },
         brushColor: String,
-        brushWidth: Number
+        brushWidth: Number,
+        erasing: Boolean
     },
     data() {
         return {
             id: "" + Math.random() * 1000000000,
             canvas: null,
+            _brush: null
         }
     },
     watch: {
@@ -35,6 +37,14 @@ export default {
         },
         brushWidth(width) {
             this.canvas.freeDrawingBrush.width = parseInt(this.brushWidth)
+        },
+        erasing(erasing) {
+            if (erasing) {
+                this._brush = this.canvas.freeDrawingBrush
+                this.canvas.freeDrawingBrush = new fabric.EraserBrush(this.canvas)
+            } else {
+                this.canvas.freeDrawingBrush = this._brush
+            }
         }
     },
     methods: {
@@ -46,6 +56,7 @@ export default {
             this.canvas.freeDrawingBrush.color = this.brushColor
             this.canvas.freeDrawingBrush.width = parseInt(this.brushWidth)
             this.canvas.on("object:added", () => { this.$emit("objectAdded", this.canvas) })
+            // this.canvas.on("erasing:end", () => { this.$emit("objectAdded", this.canvas) })
             // this.canvas.on('object:added', function () {
             //     if (!this.isRedoing) {
             //         this.h = [];

@@ -15,7 +15,7 @@
                 <Applications v-if="k === 'sheet2' && !text && totalApplications"></Applications>
                 <Applications v-if="k === 'sheet3' && totalApplications"></Applications>
                 <Fabric v-if="drawing" :width="sheetWidth" :height="sheetHeight" :brushColor="brushColor"
-                    :brushWidth="brushWidth" @objectAdded="c => $emit('objectAdded', c)"></Fabric>
+                    :brushWidth="brushWidth" :erasing="erasing" @objectAdded="c => $emit('objectAdded', c)"></Fabric>
             </b-row>
         </template>
     </b-col>
@@ -28,7 +28,8 @@ export default {
         textContainers: { type: Array, default: () => { return [] } },
         drawing: Boolean,
         brushColor: String,
-        brushWidth: Number
+        brushWidth: Number,
+        erasing: Boolean
     },
     data() {
         return {
