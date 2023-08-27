@@ -22,7 +22,9 @@ export default {
     ],
     script: [
       { src: "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js", defer: true },
-      { src: "https://unpkg.com/fabric@5.3.0/dist/fabric.min.js" },
+      // { src: "https://unpkg.com/fabric@5.3.0/dist/fabric.min.js" },
+      { src: "/js/fabric.min.js" },
+      // { src: "/js/fabric_history.min.js" },
       { src: "https://colorjs.io/dist/color.global.js" }
     ]
   },
