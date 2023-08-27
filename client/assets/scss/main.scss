@@ -146,6 +146,12 @@ body::backdrop {
   display: none;
 }
 
+.editor-control {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
 
 .fixed-bottom {
   z-index: 100;

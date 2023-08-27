@@ -61,10 +61,10 @@
                 </div>
             </b-row>
             <b-row class="gap-3 my-auto">
-                <div>
+                <div class="editor-control">
                     <font-awesome-icon icon="fa-solid fa-reply" @click="onUndo" />
                 </div>
-                <div>
+                <div class="editor-control">
                     <font-awesome-icon icon="fa-solid fa-reply" flip="horizontal" @click="onRedo" />
                 </div>
                 <!-- <b-btn id="trash">
@@ -73,7 +73,7 @@
                 <b-popover target="trash" triggers="click blur" placement="bottom">
                     <b-btn @click="onTrash">Erase All</b-btn>
                 </b-popover> -->
-                <div @click="onToggleFullscreen">
+                <div class="editor-control" @click="onToggleFullscreen">
                     <font-awesome-icon v-if="!isFullscreen" icon="fa-solid fa-expand" />
                     <font-awesome-icon v-else icon="fa-solid fa-compress" />
                 </div>
