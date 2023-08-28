@@ -1,6 +1,6 @@
 <template>
     <b-col id="sheets" class="d-flex flex-column gap-1">
-        <template v-for="(text, k) in sheetTexts">
+        <template v-for="(text, k) in  sheetTexts ">
             <b-row v-if="isSheetVisible(text, k)" :id="k" class="flex-grow-1 gap-1 overflow-auto" :key="k"
                 :ref="`textContainer`" :class="printable ? 'printable-sheet' : 'sheet'">
                 <b-col v-if="text || k === 'sheet1'" class="overflow-auto mr-2">
@@ -15,7 +15,8 @@
                 <Applications v-if="k === 'sheet2' && !text && totalApplications"></Applications>
                 <Applications v-if="k === 'sheet3' && totalApplications"></Applications>
                 <Fabric v-if="drawing" :width="sheetWidth" :height="sheetHeight" :brushColor="brushColor"
-                    :brushWidth="brushWidth" :erasing="erasing" @objectAdded="c => $emit('objectAdded', c)"></Fabric>
+                    :brushWidth="brushWidth" :erasing="erasing" :typing="typing" @objectAdded="c => $emit('objectAdded', c)"
+                    @objectErased="c => $emit('objectErased', c)"></Fabric>
             </b-row>
         </template>
     </b-col>
@@ -29,7 +30,8 @@ export default {
         drawing: Boolean,
         brushColor: String,
         brushWidth: Number,
-        erasing: Boolean
+        erasing: Boolean,
+        typing: Boolean
     },
     data() {
         return {

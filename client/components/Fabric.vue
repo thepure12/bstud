@@ -16,13 +16,15 @@ export default {
         },
         brushColor: String,
         brushWidth: Number,
-        erasing: Boolean
+        erasing: Boolean,
+        typing: Boolean
     },
     data() {
         return {
             id: "" + Math.random() * 1000000000,
             canvas: null,
-            _brush: null
+            _brush: null,
+            isEditingText: false,
         }
     },
     watch: {
@@ -45,6 +47,14 @@ export default {
             } else {
                 this.canvas.freeDrawingBrush = this._brush
             }
+        },
+        typing(typing) {
+            if (typing) {
+                this.canvas.isDrawingMode = false;
+            } else {
+                this.canvas.isDrawingMode = true;
+                // this.canvas.freeDrawingBrush = this._brush
+            }
         }
     },
     methods: {
@@ -55,14 +65,35 @@ export default {
             this.canvas.setDimensions({ width: this.width, height: this.height })
             this.canvas.freeDrawingBrush.color = this.brushColor
             this.canvas.freeDrawingBrush.width = parseInt(this.brushWidth)
-            this.canvas.on("object:added", () => { this.$emit("objectAdded", this.canvas) })
-            // this.canvas.on("erasing:end", () => { this.$emit("objectAdded", this.canvas) })
-            // this.canvas.on('object:added', function () {
-            //     if (!this.isRedoing) {
-            //         this.h = [];
-            //     }
-            //     this.isRedoing = false;
-            // });
+            this.canvas.on("object:added", (object) => {
+                this.$emit("objectAdded", this.canvas)
+            })
+            this.canvas.on("erasing:end", (object) => {
+                this.$emit("objectErased", this.canvas)
+            })
+            this.canvas.on("mouse:up", (event) => {
+                if (this.typing) {
+                    if (event.target && event.target.type === "textbox") {
+                        this.isEditingText = true
+                    } else {
+                        if (!this.isEditingText) {
+                            const text = new fabric.Textbox("Tap to edit\n", {
+                                editable: true,
+                                fontSize: 14,
+                                fontFamily: "Arial",
+                                width: 250,
+                                left: event.pointer.x,
+                                top: event.pointer.y,
+                                lockScalingY: true,
+                                padding: 10
+                            })
+                            text.setCoords()
+                            this.canvas.add(text)
+                            this.canvas.setActiveObject(text)
+                        } else this.isEditingText = false
+                    }
+                }
+            })
         }
     },
     mounted() {
