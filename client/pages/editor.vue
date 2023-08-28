@@ -14,9 +14,7 @@
                     <div :key="tool.name" :id="`tool-${tool.name}`" class="tool"
                         :class="activeTool === tool ? 'active' : ''" :style="`color: ${tool.color};`" tabindex="-1"
                         @click="onToolSelected(tool)">
-                        <!-- <b-icon :icon="tool.icon" :style="`color: ${tool.color};`">
-                    </b-icon> -->
-                        <font-awesome-icon :icon="tool.icon" />
+                        <font-awesome-icon :icon="tool.icon" fixed-width />
                         <b-popover v-if="activeTool === tool" :target="`tool-${tool.name}`" placement="bottom"
                             triggers="click blur">
                             <template v-if="tool.name !== 'eraser'">
@@ -30,14 +28,6 @@
                         </b-popover>
                     </div>
                 </template>
-                <!-- <div class="tool" :class="erasing ? 'active' : ''" @click="onEraserSelected">
-                    <font-awesome-icon id="eraser" icon="fa-solid fa-eraser" />
-                    <b-popover v-if="erasing" target="eraser" placement="bottom" triggers="click blur">
-                        <b-form-input type="range" :value="tool.width" @input="onThicknessChange" min="1" max="50"
-                            step="1"></b-form-input>
-                        <div :style="`border-bottom: ${tool.width}px solid gray;`"></div>
-                    </b-popover>
-                </div> -->
             </b-row>
             <b-row class="gap-2 my-auto">
                 <div v-for="(color, i) in savedColors" :key="`saved-color-${i}`">
@@ -60,33 +50,31 @@
                     </b-popover>
                 </div>
             </b-row>
-            <b-row class="gap-3 my-auto">
+            <b-row class="gap-4 my-auto">
                 <div class="editor-control">
                     <font-awesome-icon icon="fa-solid fa-reply" @click="onUndo" />
                 </div>
                 <div class="editor-control">
                     <font-awesome-icon icon="fa-solid fa-reply" flip="horizontal" @click="onRedo" />
                 </div>
-                <!-- <b-btn id="trash">
-                    <b-icon icon="trash"></b-icon>
-                </b-btn>
-                <b-popover target="trash" triggers="click blur" placement="bottom">
-                    <b-btn @click="onTrash">Erase All</b-btn>
-                </b-popover> -->
                 <div class="editor-control" @click="onToggleFullscreen">
-                    <font-awesome-icon v-if="!isFullscreen" icon="fa-solid fa-expand" />
-                    <font-awesome-icon v-else icon="fa-solid fa-compress" />
+                    <font-awesome-icon v-if="!isFullscreen" icon="fa-solid fa-up-right-and-down-left-from-center" />
+                    <font-awesome-icon v-else icon="fa-solid fa-down-left-and-up-right-to-center" />
+                </div>
+                <div class="editor-control" @click="onDownload">
+                    <font-awesome-icon icon="fa-solid fa-download" />
                 </div>
             </b-row>
         </b-row>
         <Sheets :textContainers.sync="textContainers" :drawing="true" :brushColor="brushColor" :brushWidth="brushWidth"
-            :erasing="erasing" @objectAdded="onObjectAdded">
+            :erasing="erasing" :typing="typing" @objectAdded="onObjectAdded" @objectErased="onObjectErased">
         </Sheets>
     </div>
 </template>
 <script>
 import Verte from 'verte';
 import 'verte/dist/verte.css';
+import { mapMutations } from 'vuex'
 import {
     BIcon,
     BIconArrow90degLeft,
@@ -118,6 +106,11 @@ export default {
         return {
             tools: [
                 {
+                    name: "keyboard",
+                    icon: "fa-solid fa-keyboard",
+                    color: "#000000",
+                },
+                {
                     name: "pencil",
                     icon: "fa-solid fa-pencil",
                     color: "#000000",
@@ -138,13 +131,15 @@ export default {
             ],
             activeTool: null,
             erasing: false,
+            typing: false,
             brushColor: "#000000",
             savedColors: ["hsl(207,44%,49%)", "hsl(248,53%,57%)", "hsl(10,100%,60%)"],
             brushWidth: 1,
             h: [],
-            isRedoing: false,
             isFullscreen: false,
-            addedHistory: [], //History of which canvas was last added to
+            lockHistory: false,
+            undoHistory: [],
+            redoHistory: [],
             textContainers: [],
 
         }
@@ -155,6 +150,10 @@ export default {
         }
     },
     methods: {
+        ...mapMutations([
+            "setDownloading",
+            "setPrintable"
+        ]),
         onSetBrush(brush) {
 
         },
@@ -164,6 +163,12 @@ export default {
                 await this.$nextTick()
             } else if (this.erasing) {
                 this.erasing = false
+                await this.$nextTick()
+            }
+            if (tool.name === "keyboard") {
+                this.typing = true
+            } else if (this.typing) {
+                this.typing = false
                 await this.$nextTick()
             }
             this.activeTool = tool
@@ -200,20 +205,40 @@ export default {
             this.activeTool.width = thickness
         },
         onObjectAdded(canvas) {
-            this.addedHistory.push(canvas)
+            if (this.lockHistory) return
+            this.undoHistory.push([canvas, JSON.stringify(canvas)])
+        },
+        onObjectErased(canvas) {
+            if (this.lockHistory) return
+            this.undoHistory.push([canvas, JSON.stringify(canvas)])
         },
         onUndo() {
-            if (this.addedHistory.length > 0) {
-                const canvas = this.addedHistory.pop()
-                this.h.push([canvas, canvas._objects.pop()])
-                canvas.renderAll()
+            if (this.undoHistory.length > 0) {
+                this.lockHistory = true
+                let [canvas, content] = this.undoHistory.pop()
+                this.redoHistory.push([canvas, content])
+                if (this.undoHistory.length >= 1 && canvas._objects.length > 1) {
+                    [canvas, content] = this.undoHistory[this.undoHistory.length - 1]
+                    canvas.loadFromJSON(content, () => {
+                        canvas.renderAll()
+                        this.lockHistory = false
+                    })
+                } else {
+                    canvas.clear()
+                    canvas.renderAll()
+                    this.lockHistory = false
+                }
             }
         },
         onRedo() {
-            if (this.h.length > 0) {
-                this.isRedoing = true;
-                const [canvas, object] = this.h.pop()
-                canvas.add(object)
+            if (this.redoHistory.length > 0) {
+                this.lockHistory = true
+                let [canvas, content] = this.redoHistory.pop()
+                this.undoHistory.push([canvas, content])
+                canvas.loadFromJSON(content, () => {
+                    canvas.renderAll()
+                    this.lockHistory = false
+                })
             }
         },
         onTrash() {
@@ -230,10 +255,38 @@ export default {
             else
                 document.body.requestFullscreen()
             this.isFullscreen = !this.isFullscreen
+        },
+        onDownload() {
+            this.setDownloading(true)
+            this.setPrintable(true)
+            this.$nextTick(() => {
+                let opt = {
+                    margin: .25,
+                    filename: this.q,
+                    jsPDF: { unit: "in", format: "letter", orientation: "landscape" },
+                }
+                let worker = html2pdf().set(opt).from(this.textContainers[0])
+                worker = worker.toPdf()
+                this.textContainers.slice(1).forEach((element, i) => {
+                    worker = worker
+                        .get('pdf')
+                        .then(pdf => {
+                            pdf.addPage()
+                        })
+                        .from(element)
+                        .toContainer()
+                        .toCanvas()
+                        .toPdf()
+                })
+                worker.save().then(() => {
+                    this.setDownloading(false)
+                    this.setPrintable(false)
+                })
+            })
         }
     },
     created() {
-        this.onToolSelected(this.tools[0])
+        this.onToolSelected(this.tools[1])
     },
     mounted() {
     }
