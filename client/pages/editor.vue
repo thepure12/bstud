@@ -61,6 +61,21 @@
                     <font-awesome-icon v-if="!isFullscreen" icon="fa-solid fa-up-right-and-down-left-from-center" />
                     <font-awesome-icon v-else icon="fa-solid fa-down-left-and-up-right-to-center" />
                 </div>
+                <div class="editor-control" @click="onSave">
+                    <font-awesome-icon icon="fa-solid fa-floppy-disk" />
+                </div>
+                <div v-if="savedSheets" class="editor-control">
+                    <font-awesome-icon v-b-toggle.savedSheets icon="fa-solid fa-folder" />
+                    <b-sidebar id="savedSheets" title="Saved Sheets" header-class="bg-primary d-flex" bg-variant="dark"
+                        text-variant="white" backdrop-variant="dark" body-class="py-2 px-4" width="360px" backdrop right>
+                        <b-row v-for="(sheet, uuid) in savedSheets" :key="uuid" class="border-bottom border-primary py-2">
+                            <b-link class="text-white" :to="`/editor?uuid=${uuid}`" @click="onLoadSaved">
+                                <font-awesome-icon icon="fa-solid fa-file" class="mr-2" />
+                                {{ sheet.textOptions.q }}
+                            </b-link>
+                        </b-row>
+                    </b-sidebar>
+                </div>
                 <div class="editor-control" @click="onDownload">
                     <font-awesome-icon icon="fa-solid fa-download" />
                 </div>
@@ -77,8 +92,9 @@
                 </div>
             </b-row>
         </b-row>
-        <Sheets :textContainers.sync="textContainers" :drawing="true" :brushColor="brushColor" :brushWidth="brushWidth"
-            :erasing="erasing" :typing="typing" @objectAdded="onObjectAdded" @objectErased="onObjectErased">
+        <Sheets ref="sheets" :textContainers.sync="textContainers" :drawing="true" :brushColor="brushColor"
+            :brushWidth="brushWidth" :erasing="erasing" :typing="typing" @objectAdded="onObjectAdded"
+            @objectErased="onObjectErased">
         </Sheets>
     </div>
 </template>
@@ -136,18 +152,28 @@ export default {
             undoHistory: [],
             redoHistory: [],
             textContainers: [],
-
+            savedSheets: null
         }
     },
     computed: {
         q() {
             return this.$store.state.textOptions.q
+        },
+        uuid() {
+            return this.$route.query.uuid || this.uuidv4()
         }
     },
     methods: {
         ...mapMutations([
             "setDownloading",
-            "setPrintable"
+            "setPrintable",
+            "setPassages",
+            "setObservation",
+            "setTextOption",
+            "setFontSize",
+            "setLineSpacing",
+            "setQuestion",
+            "setApplication",
         ]),
         onSetBrush(brush) {
 
@@ -251,6 +277,31 @@ export default {
                 document.body.requestFullscreen()
             this.isFullscreen = !this.isFullscreen
         },
+        onSave() {
+            let saved = localStorage.getItem("savedSheets")
+            saved = saved ? JSON.parse(saved) : {}
+            const data = {
+                canvases: this.$refs.sheets.$refs.canvases.map(ref => ref.canvas),
+                textOptions: this.$store.state.textOptions,
+                passages: this.$store.state.passages,
+                observations: this.$store.state.observations,
+                questions: this.$store.state.questions,
+                applications: this.$store.state.applications,
+                fontSize: this.$store.state.fontSize,
+                lineSpacing: this.$store.state.lineSpacing,
+            }
+            saved[this.uuid] = data
+            localStorage.setItem("savedSheets", JSON.stringify(saved))
+            this.savedSheets = JSON.parse(localStorage.getItem("savedSheets"))
+            this.$bvToast.toast(`Worksheet Saved`, {
+                title: 'Success',
+                autoHideDelay: 2000,
+                variant: "success"
+            })
+        },
+        onLoadSaved() {
+            this.loadSaved()
+        },
         onDownload() {
             this.setDownloading(true)
             this.setPrintable(true)
@@ -278,12 +329,61 @@ export default {
                     this.setPrintable(false)
                 })
             })
+        },
+        uuidv4() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+                .replace(/[xy]/g, function (c) {
+                    const r = Math.random() * 16 | 0,
+                        v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+        },
+        loadSaved() {
+            if (this.uuid) {
+                let savedSheets = this.savedSheets
+                if (savedSheets) {
+                    let sheet = savedSheets[this.uuid]
+                    if (sheet) {
+                        // Text Options
+                        for (const [key, val] of Object.entries(sheet.textOptions)) {
+                            this.setTextOption({ option: key, value: val })
+                        }
+                        // Observations
+                        for (const [key, val] of Object.entries(sheet.observations)) {
+                            this.setObservation({ observation: key, value: val })
+                        }
+                        // Questions
+                        for (const [key, val] of Object.entries(sheet.questions)) {
+                            this.setTextOption({ question: key, value: val })
+                        }
+                        // Applications
+                        for (const [key, val] of Object.entries(sheet.applications)) {
+                            this.setTextOption({ application: key, value: val })
+                        }
+                        // Passages
+                        this.setPassages(sheet.passages)
+                        // Font Size
+                        this.setFontSize(sheet.fontSize)
+                        // Line Spacing
+                        this.setLineSpacing(sheet.lineSpacing)
+                        this.$nextTick(() => {
+                            this.$refs.sheets.$refs.canvases.forEach((ref, i) => {
+                                ref.canvas.loadFromJSON(JSON.stringify(sheet.canvases[i]), () => {
+                                    ref.canvas.renderAll()
+                                })
+                            })
+                        })
+                    }
+                }
+            }
         }
     },
     created() {
         this.onToolSelected(this.tools[1])
     },
     mounted() {
+        this.savedSheets = JSON.parse(localStorage.getItem("savedSheets"))
+        this.loadSaved()
     }
 }
 </script>
