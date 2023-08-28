@@ -54,6 +54,7 @@ export default {
     '@nuxtjs/style-resources',
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/pwa',
   ],
 
   bootstrapVue: {
@@ -64,6 +65,22 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     baseURL: process.env.NODE_ENV !== 'production' ? "http://localhost:8000" : "https://bstud-api.vercel.app"
+  },
+
+  // PWA module configuration: https://go.nuxtjs.dev/pwa
+  pwa: {
+    meta: {
+      title: "Vathéos",
+      author: "TJ Renninger",
+      theme_color: 'slateblue'
+    },
+    manifest: {
+      lang: 'en',
+      name: 'Vathéos',
+      short_name: 'Vathéos',
+      start_url: '/',
+      background_color: 'steelblue'
+    },
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
