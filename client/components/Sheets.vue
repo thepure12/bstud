@@ -14,7 +14,7 @@
                 <!-- Applications -->
                 <Applications v-if="k === 'sheet2' && !text && totalApplications"></Applications>
                 <Applications v-if="k === 'sheet3' && totalApplications"></Applications>
-                <Fabric v-if="drawing" :width="sheetWidth" :height="sheetHeight" :brushColor="brushColor"
+                <Fabric ref="canvases" v-if="drawing" :width="sheetWidth" :height="sheetHeight" :brushColor="brushColor"
                     :brushWidth="brushWidth" :erasing="erasing" :typing="typing" @objectAdded="c => $emit('objectAdded', c)"
                     @objectErased="c => $emit('objectErased', c)"></Fabric>
             </b-row>
