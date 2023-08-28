@@ -36,9 +36,21 @@ export default {
         },
         brushColor(color) {
             this.canvas.freeDrawingBrush.color = this.brushColor
+            if (this.typing) {
+                let activeOvject = this.canvas.getActiveObject()
+                if (activeOvject)
+                    activeOvject.set({ fill: color })
+                this.canvas.renderAll()
+            }
         },
         brushWidth(width) {
             this.canvas.freeDrawingBrush.width = parseInt(this.brushWidth)
+            if (this.typing) {
+                let activeOvject = this.canvas.getActiveObject()
+                if (activeOvject)
+                    activeOvject.set({ fontSize: width })
+                this.canvas.renderAll()
+            }
         },
         erasing(erasing) {
             if (erasing) {
@@ -79,8 +91,9 @@ export default {
                         if (!this.isEditingText) {
                             const text = new fabric.Textbox("Tap to edit\n", {
                                 editable: true,
-                                fontSize: 14,
+                                fontSize: this.brushWidth,
                                 fontFamily: "Arial",
+                                fill: this.brushColor,
                                 width: 250,
                                 left: event.pointer.x,
                                 top: event.pointer.y,
