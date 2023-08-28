@@ -394,9 +394,10 @@ export default {
     },
     created() {
         this.onToolSelected(this.tools[1])
+        this.savedSheets = JSON.parse(localStorage.getItem("savedSheets")) || {}
     },
     mounted() {
-        this.savedSheets = JSON.parse(localStorage.getItem("savedSheets"))
+        
         this.loadSaved()
     }
 }
