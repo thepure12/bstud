@@ -65,7 +65,7 @@
                     <font-awesome-icon icon="fa-solid fa-floppy-disk" />
                 </div>
                 <div v-if="savedSheets && Object.keys(savedSheets).length" class="editor-control">
-                    <font-awesome-icon v-b-toggle.savedSheets icon="fa-solid fa-folder" />
+                    <font-awesome-icon v-b-toggle.savedSheets icon="fa-solid fa-folder-open" />
                     <b-sidebar id="savedSheets" title="Saved Sheets" header-class="bg-primary d-flex" bg-variant="dark"
                         text-variant="white" backdrop-variant="dark" body-class="py-2 px-4" width="360px" backdrop right>
                         <b-row v-for="(sheet, uuid) in savedSheets" :key="uuid" class="border-bottom border-primary py-2">
