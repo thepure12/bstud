@@ -1,6 +1,7 @@
 <template>
     <div>
-        <b-row class="mb-3 py-2 justify-content-around sticky-top bg-dark text-white h5">
+        <b-row class="mb-3 py-2 gap-4 justify-content-center sticky-top bg-dark text-white h5">
+            <!-- Text Reference -->
             <b-row class="my-auto gap-2">
                 <div to="/">
                     <b-link class="text-white" to="/">
@@ -9,6 +10,8 @@
                 </div>
                 <div>{{ q }}</div>
             </b-row>
+            <b-row class="border-right"></b-row>
+            <!-- Tools -->
             <b-row class="tools my-auto gap-2">
                 <template v-for="tool in tools">
                     <div :key="tool.name" :id="`tool-${tool.name}`" class="tool"
@@ -24,11 +27,15 @@
                             </template>
                             <b-form-input type="range" :value="tool.width" @input="onThicknessChange" min="1" max="50"
                                 step="1"></b-form-input>
-                            <div :style="`border-bottom: ${tool.width}px solid ${tool.color}`"></div>
+                            <div v-if="tool.name !== 'keyboard'"
+                                :style="`border-bottom: ${tool.width}px solid ${tool.color}`"></div>
+                            <div v-else :style="`font-size: ${tool.width}px; color: ${tool.color};`">Aa</div>
                         </b-popover>
                     </div>
                 </template>
             </b-row>
+            <b-row class="border-right"></b-row>
+            <!-- Saved Colors -->
             <b-row class="gap-2 my-auto">
                 <div v-for="(color, i) in savedColors" :key="`saved-color-${i}`">
                     <b-icon :id="`saved-color-${i}`" icon="circle-fill" scale="1.2" :style="`color: ${color};`"
@@ -41,15 +48,8 @@
                     </b-popover>
                 </div>
             </b-row>
-            <b-row class="gap-2 my-auto">
-                <div>Editor Beta</div>
-                <div>
-                    <font-awesome-icon id="beta-info" icon="fa-solid fa-circle-info" />
-                    <b-popover target="beta-info" placement="bottom" triggers="click blur">
-                        This editor is still a work in progress. There may be bugs. Please report them.
-                    </b-popover>
-                </div>
-            </b-row>
+            <b-row class="border-right"></b-row>
+            <!-- Controls -->
             <b-row class="gap-4 my-auto">
                 <div class="editor-control">
                     <font-awesome-icon icon="fa-solid fa-reply" @click="onUndo" />
@@ -65,6 +65,17 @@
                     <font-awesome-icon icon="fa-solid fa-download" />
                 </div>
             </b-row>
+            <b-row class="border-right"></b-row>
+            <!-- Disclaimer -->
+            <b-row class="gap-2 my-auto">
+                <div>Notes Beta</div>
+                <div>
+                    <font-awesome-icon id="beta-info" icon="fa-solid fa-circle-info" />
+                    <b-popover target="beta-info" placement="bottom" triggers="click blur">
+                        This editor is still a work in progress. There may be bugs. Please report them.
+                    </b-popover>
+                </div>
+            </b-row>
         </b-row>
         <Sheets :textContainers.sync="textContainers" :drawing="true" :brushColor="brushColor" :brushWidth="brushWidth"
             :erasing="erasing" :typing="typing" @objectAdded="onObjectAdded" @objectErased="onObjectErased">
@@ -77,30 +88,13 @@ import 'verte/dist/verte.css';
 import { mapMutations } from 'vuex'
 import {
     BIcon,
-    BIconArrow90degLeft,
-    BIconArrow90degRight,
-    BIconTrash,
-    BIconFullscreen,
-    BIconFullscreenExit,
-    BIconArrowLeft,
     BIconCircleFill,
-    BIconEraser,
-    BIconPencilFill,
-    BIconTelephoneMinus
 } from 'bootstrap-vue'
 export default {
     components: {
         Verte,
         BIcon,
-        BIconArrow90degLeft,
-        BIconArrow90degRight,
-        BIconTrash,
-        BIconFullscreen,
-        BIconFullscreenExit,
-        BIconArrowLeft,
         BIconCircleFill,
-        BIconEraser,
-        BIconPencilFill
     },
     data() {
         return {
@@ -109,6 +103,7 @@ export default {
                     name: "keyboard",
                     icon: "fa-solid fa-keyboard",
                     color: "#000000",
+                    width: 14
                 },
                 {
                     name: "pencil",
