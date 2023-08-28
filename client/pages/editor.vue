@@ -64,7 +64,7 @@
                 <div class="editor-control" @click="onSave">
                     <font-awesome-icon icon="fa-solid fa-floppy-disk" />
                 </div>
-                <div v-if="savedSheets" class="editor-control">
+                <div v-if="savedSheets && Object.keys(savedSheets).length" class="editor-control">
                     <font-awesome-icon v-b-toggle.savedSheets icon="fa-solid fa-folder" />
                     <b-sidebar id="savedSheets" title="Saved Sheets" header-class="bg-primary d-flex" bg-variant="dark"
                         text-variant="white" backdrop-variant="dark" body-class="py-2 px-4" width="360px" backdrop right>
@@ -73,6 +73,10 @@
                                 <font-awesome-icon icon="fa-solid fa-file" class="mr-2" />
                                 {{ sheet.textOptions.q }}
                             </b-link>
+                            <font-awesome-icon :id="`trash-${uuid}`" icon="fa-solid fa-trash" class="ml-auto my-auto" />
+                            <b-popover :target="`trash-${uuid}`" triggers="click blur" placement="left">
+                                <b-btn variant="danger" @click="onDeleteSaved(uuid)">Delete</b-btn>
+                            </b-popover>
                         </b-row>
                     </b-sidebar>
                 </div>
@@ -278,8 +282,6 @@ export default {
             this.isFullscreen = !this.isFullscreen
         },
         onSave() {
-            let saved = localStorage.getItem("savedSheets")
-            saved = saved ? JSON.parse(saved) : {}
             const data = {
                 canvases: this.$refs.sheets.$refs.canvases.map(ref => ref.canvas),
                 textOptions: this.$store.state.textOptions,
@@ -290,17 +292,29 @@ export default {
                 fontSize: this.$store.state.fontSize,
                 lineSpacing: this.$store.state.lineSpacing,
             }
-            saved[this.uuid] = data
-            localStorage.setItem("savedSheets", JSON.stringify(saved))
+            this.savedSheets[this.uuid] = data
+            localStorage.setItem("savedSheets", JSON.stringify(this.savedSheets))
             this.savedSheets = JSON.parse(localStorage.getItem("savedSheets"))
             this.$bvToast.toast(`Worksheet Saved`, {
                 title: 'Success',
-                autoHideDelay: 2000,
+                autoHideDelay: 100,
                 variant: "success"
             })
         },
         onLoadSaved() {
             this.loadSaved()
+        },
+        onDeleteSaved(uuid) {
+            delete this.savedSheets[uuid]
+            this.savedSheets = JSON.parse(JSON.stringify(this.savedSheets))
+            localStorage.setItem("savedSheets", JSON.stringify(this.savedSheets))
+            this.$nextTick(
+                this.$bvToast.toast(`Worksheet Deleted`, {
+                    title: 'Success',
+                    autoHideDelay: 100,
+                    variant: "success"
+                })
+            )
         },
         onDownload() {
             this.setDownloading(true)
