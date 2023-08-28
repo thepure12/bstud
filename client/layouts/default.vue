@@ -103,10 +103,11 @@ export default {
             }
         }
 
-        this.$store.dispatch("fetchText")
-            .then(() => {
-                this.setPrintable(query.print === "true")
-            })
+        if (!this.$route.query.uuid)
+            this.$store.dispatch("fetchText")
+                .then(() => {
+                    this.setPrintable(query.print === "true")
+                })
     },
 }
 </script>
