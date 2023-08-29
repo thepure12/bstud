@@ -98,8 +98,29 @@
         </b-row>
         <Sheets ref="sheets" :textContainers.sync="textContainers" :drawing="true" :brushColor="brushColor"
             :brushWidth="brushWidth" :erasing="erasing" :typing="typing" @objectAdded="onObjectAdded"
-            @objectErased="onObjectErased">
+            :style="`scale: ${sheetScale};`" @objectErased="onObjectErased">
         </Sheets>
+        <div class="scale-control">
+            <template v-if="scaleControl">
+                <div class="scale-control-top">
+                    <div class="scale-control-btn" @click="sheetScale += .05">
+                        <font-awesome-icon icon="fa-solid fa-plus" fixed-width />
+                    </div>
+                </div>
+                <div class="scale-control-middle">
+                    {{ Math.round(sheetScale * 100) }}%
+                </div>
+                <div class="scale-control-bottom">
+                    <div class="scale-control-btn" @click="sheetScale -= .05">
+                        <font-awesome-icon icon="fa-solid fa-minus" fixed-width />
+                    </div>
+                </div>
+            </template>
+            <div class="scale-control-btn scale-caret" @click="scaleControl = !scaleControl">
+                <font-awesome-icon v-if="!scaleControl" icon="fa-solid fa-caret-up" />
+                <font-awesome-icon v-else icon="fa-solid fa-caret-down" />
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -156,7 +177,9 @@ export default {
             undoHistory: [],
             redoHistory: [],
             textContainers: [],
-            savedSheets: null
+            savedSheets: null,
+            sheetScale: 1.0,
+            scaleControl: false
         }
     },
     computed: {
@@ -397,7 +420,7 @@ export default {
         this.savedSheets = JSON.parse(localStorage.getItem("savedSheets")) || {}
     },
     mounted() {
-        
+
         this.loadSaved()
     }
 }
