@@ -148,6 +148,54 @@ body::backdrop {
   -ms-user-select: none;
 }
 
+
+.scale-control {
+  opacity: .8;
+  position: absolute;
+  bottom: .25rem;
+  left: .25rem;
+  text-align: center;
+  color: white;
+  width: 40px;
+}
+
+.scale-control-top,
+.scale-control-middle,
+.scale-control-bottom {
+  background-color: var(--dark);
+  padding: .25rem;
+}
+
+.scale-control-top {
+  border-top-left-radius: 100%;
+  border-top-right-radius: 100%;
+}
+
+.scale-control-bottom {
+  border-bottom-left-radius: 100%;
+  border-bottom-right-radius: 100%;
+}
+
+.scale-control-middle {
+  font-size: small;
+  padding-block: 0;
+}
+
+.scale-control-btn {
+  background-color: var(--secondary);
+  border-radius: 100%;
+  aspect-ratio: 1;
+  line-height: 2.2;
+}
+
+.scale-caret {
+  margin-left: .25rem;
+  margin-top: .25rem;
+  width: 2rem;
+  height: 2rem;
+  line-height: 1.75;
+}
+
 .fixed-bottom {
   z-index: 100;
 }
