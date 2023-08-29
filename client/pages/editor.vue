@@ -255,6 +255,7 @@ export default {
         onObjectAdded(canvas) {
             if (this.lockHistory) return
             this.undoHistory.push([canvas, JSON.stringify(canvas)])
+            this.redoHistory.length = 0
         },
         onObjectErased(canvas) {
             if (this.lockHistory) return
