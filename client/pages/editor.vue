@@ -98,7 +98,7 @@
         </b-row>
         <Sheets ref="sheets" :textContainers.sync="textContainers" :drawing="true" :brushColor="brushColor"
             :brushWidth="brushWidth" :erasing="erasing" :typing="typing" @objectAdded="onObjectAdded"
-            :style="`scale: ${sheetScale};`" @objectErased="onObjectErased">
+            :style="`transform: scale(${sheetScale}); transform-origin: top;`" @objectErased="onObjectErased">
         </Sheets>
         <div class="scale-control">
             <template v-if="scaleControl">
