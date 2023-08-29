@@ -95,6 +95,12 @@ body::backdrop {
   overflow-x: auto;
 }
 
+.card {
+  resize: both;
+  overflow: auto;
+  max-width: 497px !important;
+}
+
 .card-body {
   font-size: 10pt;
   font-weight: bold;
